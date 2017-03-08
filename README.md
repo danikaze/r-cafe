@@ -10,6 +10,9 @@ Easily display what's in the Rakuten Cafeteria without *JavaScript errors* ;)
 
 ## Change log
 
+### 0.1.2
+Added github link ;)
+
 ### 0.1.1
 Added extension icons
 

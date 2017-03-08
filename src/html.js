@@ -1,6 +1,7 @@
 const TIME_LUNCH = 1;
 const TIME_DINNER = 2;
 
+const ID_GITHUB = 'github';
 const ID_CONTAINER = 'container';
 const ID_LOADING = 'loading';
 const ID_ERROR = 'error';
@@ -206,6 +207,15 @@ function createTimeMenu(data, mealTime) {
   return elem;
 }
 
+function createGitHubLink() {
+  const html = '<img src="img/github.png" alt="Github">';
+  const linkElem = createElementById('a', ID_GITHUB, html);
+  linkElem.href = 'https://github.com/danikaze/rakuten-cafeteria-menu';
+  linkElem.title = 'View this extension in github';
+  linkElem.target = '_blank';
+  return linkElem;
+}
+
 /**
  * Create the html to show all the menus
  */
@@ -237,4 +247,6 @@ html.showMenus = (data) => {
 
   showDinnerElem.addEventListener('click', () => swap(dinner, lunch));
   showLunchElem.addEventListener('click', () => swap(lunch, dinner));
+
+  containerElem.appendChild(createGitHubLink());
 };

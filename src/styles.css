@@ -53,8 +53,8 @@ body {
   width: 28px;
   height: 28px;
   position: fixed;
-  top: 5px;
-  right: 20px;
+  top: 6px;
+  left: 6px;
   border: 1px solid #808080;
   cursor: pointer;
   display: none;
@@ -79,7 +79,7 @@ body {
 .tabs {
   position: fixed;
   z-index: 100;
-  padding: 2px 10px 0 20px;
+  padding: 2px 10px 0 50px;
   border-bottom: 1px solid #555;
   background: #cecece;
   width: 100%;
@@ -274,4 +274,18 @@ body {
 
 #error .bottom {
   padding: 1em 20px 20px 100px;
+}
+
+#github {
+  position: fixed;
+  top: 5px;
+  right: 6px;
+  cursor: pointer;
+  display: block;
+  z-index: 200;
+}
+
+#github img {
+  width: 28px;
+  height: 28px;
 }
