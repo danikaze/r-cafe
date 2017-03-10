@@ -10,11 +10,14 @@ Easily display what's in the Rakuten Cafeteria without *JavaScript errors* ;)
 
 ## Change log
 
+### 0.2.0
+- Show night menu by default if it's between 14:00 and 0:00
+
 ### 0.1.2
-Added github link ;)
+- Added github link ;)
 
 ### 0.1.1
-Added extension icons
+- Added extension icons
 
 ### 0.1.0
-First release
+- First release

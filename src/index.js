@@ -36,6 +36,8 @@ function processJson(response) {
   }
 
   const menus = {};
+  const currentHour = new Date().getHours();
+  const showDinner = currentHour > 13;
 
   response.data.forEach(item => {
     let time = menus[item.mealTime];
@@ -59,7 +61,7 @@ function processJson(response) {
   });
 
   html.hideLoading();
-  html.showMenus(menus);
+  html.showMenus(menus, showDinner);
 }
 
 /**

@@ -207,6 +207,9 @@ function createTimeMenu(data, mealTime) {
   return elem;
 }
 
+/**
+ *
+ */
 function createGitHubLink() {
   const html = '<img src="img/github.png" alt="Github">';
   const linkElem = createElementById('a', ID_GITHUB, html);
@@ -218,8 +221,10 @@ function createGitHubLink() {
 
 /**
  * Create the html to show all the menus
+ * @param {Object}  name       Processed data
+ * @param {Boolean} showDinner if <code>true</code> it will show by default the night menu instead of lunch
  */
-html.showMenus = (data) => {
+html.showMenus = (data, showDinner) => {
   function swap(show, hide) {
     hide.forEach(elem => {
       elem.classList.remove(CLASS_ACTIVE);
@@ -234,7 +239,6 @@ html.showMenus = (data) => {
 
   const showDinnerElem = createElementById('div', ID_SHOW_DINNER);
   showDinnerElem.title = 'Displaying lunch.\nClick to show dinner time.';
-  showDinnerElem.classList.add(CLASS_ACTIVE);
   containerElem.appendChild(showDinnerElem);
 
   const showLunchElem = createElementById('div', ID_SHOW_LUNCH);
@@ -243,7 +247,12 @@ html.showMenus = (data) => {
 
   const lunch = [lunchElem, showDinnerElem];
   const dinner = [dinnerElem, showLunchElem];
-  lunchElem.classList.add(CLASS_ACTIVE);
+
+  if (showDinner) {
+    swap(dinner, lunch);
+  } else {
+    swap(lunch, dinner);
+  }
 
   showDinnerElem.addEventListener('click', () => swap(dinner, lunch));
   showLunchElem.addEventListener('click', () => swap(lunch, dinner));
