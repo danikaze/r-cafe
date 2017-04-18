@@ -3,7 +3,7 @@
 
   "name": "Rakuten Cafeteria Menu",
   "description": "Shows a preview of the Rakuten Cafeteria menus",
-  "version": "0.2.0",
+  "version": "0.3.0",
 
   "icons": {
     "16": "icon16.png",

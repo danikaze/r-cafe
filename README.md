@@ -10,6 +10,9 @@ Easily display what's in the Rakuten Cafeteria without *JavaScript errors* ;)
 
 ## Change log
 
+### 0.3.0
+- Added cafeteria congestion data (only from 11:00-14:00 and 19:00-21:00)
+
 ### 0.2.0
 - Show night menu by default if it's between 14:00 and 0:00
 
