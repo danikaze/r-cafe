@@ -93,10 +93,12 @@
         if (currentHour < 11 || (currentHour > 14 && currentHour < 19) || currentHour > 21) {
           return;
         }
-        congestion.get().then(html.setCongestion, noop);
-        setInterval(() => {
-          congestion.get().then(html.setCongestion, noop);
-        }, CONGESTION_UPDATE_INTERVAL)
+        congestion.get().then((data) => {
+          html.setCongestion(data);
+          const intervalHandler = setInterval(() => {
+            congestion.get().then(html.setCongestion, () => clearInterval(intervalHandler));
+          }, CONGESTION_UPDATE_INTERVAL);
+        }, noop);
       });
   }
 

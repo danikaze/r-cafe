@@ -2,17 +2,19 @@
   "manifest_version": 2,
 
   "name": "Rakuten Cafeteria Menu",
-  "description": "Shows a preview of the Rakuten Cafeteria menus",
+  "description": "Shows a preview of the Rakuten Crimson House Cafeteria menus",
   "version": "0.3.0",
 
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
-    "128": "icon128.png"
+    "96": "icon96.png",
+    "128": "icon128.png",
+    "256": "icon256.png"
   },
 
   "browser_action": {
-    "default_icon": "icon48.png",
+    "default_icon": "icon128.png",
     "default_popup": "src/popup.html",
     "default_title": "Show Rakuten Cafeteria menu"
   },

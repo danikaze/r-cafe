@@ -104,7 +104,11 @@ function request(url, options) {
       }
     };
 
-    xhr.send();
+    try {
+      xhr.send();
+    } catch (e) {
+      reject(xhr, e);
+    }
   });
 }
 
