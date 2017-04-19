@@ -1,6 +1,6 @@
 # Rakuten Cafeteria Menu extension
 
-Easily display what's in the Rakuten Cafeteria without *JavaScript errors* ;)
+Easily display what's in the Cafeteria of the Rakuten Crimson House without *JavaScript errors* ;)
 
 ## How to install it in Chrome
 
@@ -9,6 +9,10 @@ Easily display what's in the Rakuten Cafeteria without *JavaScript errors* ;)
 3. Drag and drop the `rakutenCafeteria.crx` file into the Chrome Extensions window to install.
 
 ## Change log
+
+### 0.3.0
+- Added cafeteria congestion data support (only displayed from 11:00-14:00 and 19:00-21:00)
+- Added new icons
 
 ### 0.2.0
 - Show night menu by default if it's between 14:00 and 0:00

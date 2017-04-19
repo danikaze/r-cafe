@@ -289,3 +289,38 @@ body {
   width: 28px;
   height: 28px;
 }
+
+#congestion {
+  position: fixed;
+  top: 11px;
+  right: 43px;
+  width: 200px;
+  height: 15px;
+  z-index: 300;
+  border: 1px solid gray;
+  overflow: hidden;
+}
+
+#congestion .bar {
+  position: absolute;
+  background: gray;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 25%;
+}
+
+#congestion .rate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+#congestion .rate span {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0 5px;
+  font-size: small;
+}

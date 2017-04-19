@@ -1,4 +1,10 @@
 /**
+ * Does nothing
+ * Returns undefined
+ */
+function noop () {}
+
+/**
  * Check if an object is a string
  *
  * @param   {*}       obj Object to check
@@ -55,7 +61,10 @@ function getNumericDate() {
  */
 function getJson(url, options) {
   return new Promise((resolve, reject) => {
-    function resolveWithData(data) {
+    function resolveJson([data, xhr]) {
+      if (!isString(data)) {
+        data = JSON.stringify(data);
+      }
       try {
         json = JSON.parse(data);
         resolve(json, xhr);
@@ -64,12 +73,21 @@ function getJson(url, options) {
       }
     }
 
+    request(url, options).then(resolveJson, reject);
+  });
+}
+
+/**
+ * Request a URL and return the content as plain text
+ *
+ * @param   {String}  url       url to open
+ * @param   {Object}  [options]
+ * @returns {Promise}           Promise resolved to a String
+ */
+function request(url, options) {
+  return new Promise((resolve, reject) => {
     if (options.mockData) {
-      if (!isString(options.mockData)) {
-        resolveWithData(JSON.stringify(options.mockData));
-      } else {
-        resolveWithData(options.mockData);
-      }
+      resolve(options.mockData);
       return;
     }
 
@@ -79,14 +97,18 @@ function getJson(url, options) {
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 400) {
-          resolveWithData(xhr.responseText);
+          resolve([xhr.responseText, xhr]);
         } else {
           reject(xhr);
         }
       }
     };
 
-    xhr.send();
+    try {
+      xhr.send();
+    } catch (e) {
+      reject(xhr, e);
+    }
   });
 }
 
