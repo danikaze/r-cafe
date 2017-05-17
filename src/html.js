@@ -117,7 +117,9 @@
   function createTab(data, parent) {
     const elem = document.createElement('li');
     elem.classList.add(CLASS_TAB);
-    elem.innerHTML = data[0].cafeteriaId;
+    // elem.innerHTML = data[0].cafeteriaId;
+    if(data[0].cafeteriaId === '9F') { elem.innerHTML = "<img src='img/9_floor.png'>" }
+    else if (data[0].cafeteriaId === '22F') { elem.innerHTML = "<img src='img/22_floor.png'>" }
     elem.dataset.floor = data[0].cafeteriaId;
     parent.appendChild(elem);
 
@@ -308,9 +310,10 @@
     const rate = congestionData && congestionData[activeFloor];
     if (rate !== undefined) {
       const elem = createElementById('div', ID_CONGESTION,
-        `<div class="${CLASS_CONGESTION_BAR}" style="width: ${rate}%;"></div><div class="${CLASS_CONGESTION_RATE}"><span>${100-rate}%</span></rate>`);
-      elem.style = `background-color: ${getColor(rate)};`;
-      elem.title = 'Free space';
+        // `<div class="${CLASS_CONGESTION_BAR}"></div><div class="${CLASS_CONGESTION_RATE}"><span>${100-rate}%</span></rate>`
+        `<div class="crowdcongestion"><img src="img/people.png"></div> &nbsp; <div class="crowdcongestionrate"><span>${rate}%</span></rate>`);
+      // elem.style = `background-color: ${getColor(rate)};`;
+      elem.title = 'Filled space';
       containerElem.appendChild(elem);
     }
   };
