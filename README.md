@@ -8,6 +8,10 @@ Get the extension in the [Chrome Store](http://bit.ly/rakuten-cafeteria-menu)
 
 ## Change log
 
+### 0.4.0
+- New UI in the header icons/buttons
+- Don't display duplicated elements coming from the API
+
 ### 0.3.0
 - Added cafeteria congestion data support (only displayed from 11:00-14:00 and 19:00-21:00)
 - Added new icons

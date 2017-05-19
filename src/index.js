@@ -42,7 +42,16 @@
     const currentHour = new Date().getHours();
     const showDinner = currentHour > 13;
 
+    // API is shit and menuID is different even for duplicated elements, so we filter manually
+    const uniques = [];
+
     response.data.forEach(item => {
+      const key = `${item.cafeteriaId}:${item.mealTime}:${item.title}`;
+      if (uniques.indexOf(key) !== -1) {
+        return;
+      }
+      uniques.push(key);
+
       let time = menus[item.mealTime];
       if (!time) {
         time = {};
