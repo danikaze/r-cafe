@@ -17,6 +17,7 @@
   const CLASS_MENUS = 'menu';
   const CLASS_TABS = 'tabs';
   const CLASS_TAB = 'tab';
+  const CLASS_TAB_ID = 'tab-{{ID}}';
   const CLASS_ACTIVE = 'active';
   const CLASS_CONTENT = 'content';
   const CLASS_DISHES = 'dishes';
@@ -117,9 +118,9 @@
   function createTab(data, parent) {
     const elem = document.createElement('li');
     elem.classList.add(CLASS_TAB);
-    // elem.innerHTML = data[0].cafeteriaId;
-    if(data[0].cafeteriaId === '9F') { elem.innerHTML = "<img src='img/9_floor.png'>" }
-    else if (data[0].cafeteriaId === '22F') { elem.innerHTML = "<img src='img/22_floor.png'>" }
+    elem.classList.add(CLASS_TAB_ID.replace('{{ID}}', data[0].cafeteriaId));
+    elem.innerHTML = `${data[0].cafeteriaId}`;
+
     elem.dataset.floor = data[0].cafeteriaId;
     parent.appendChild(elem);
 
@@ -281,27 +282,6 @@
   /**
    *
    */
-  function getColor(rate) {
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (rate < 50) {
-      r = 127 + (255 - 127) * (rate/50);
-      g = 204 + (224 - 204) * (rate/50);
-      b = 110 - (110 - 37) * (rate/50);
-    } else {
-      r = 255 - (255 - 186) * ((rate - 50) / 50);
-      g = 224 - (224 - 37) * ((rate - 50) / 50);
-      b = 48 - (37 - 48) * ((rate - 50) / 50);
-    }
-
-    return `#${(r | 0).toString(16)}${(g | 0).toString(16)}${(b | 0).toString(16)}`;
-  }
-
-  /**
-   *
-   */
   html.setCongestion = (newData) => {
     removeElementById(ID_CONGESTION);
     if (newData) {
@@ -309,11 +289,8 @@
     }
     const rate = congestionData && congestionData[activeFloor];
     if (rate !== undefined) {
-      const elem = createElementById('div', ID_CONGESTION,
-        // `<div class="${CLASS_CONGESTION_BAR}"></div><div class="${CLASS_CONGESTION_RATE}"><span>${100-rate}%</span></rate>`
-        `<div class="crowdcongestion"><img src="img/people.png"></div> &nbsp; <div class="crowdcongestionrate"><span>${rate}%</span></rate>`);
-      // elem.style = `background-color: ${getColor(rate)};`;
-      elem.title = 'Filled space';
+      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${rate}%</span>`);
+      elem.title = 'Ocuppation percentage';
       containerElem.appendChild(elem);
     }
   };

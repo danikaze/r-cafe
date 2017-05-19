@@ -53,7 +53,7 @@ body {
   width: 68px;
   height: 32px;
   position: fixed;
-  top: 4px;
+  top: 3px;
   right: 48px;
   cursor: pointer;
   display: none;
@@ -69,7 +69,7 @@ body {
 
 #show-dinner { background: url(img/dayON.png); }
 #show-lunch { background: url(img/nightON.png); }
- 
+
 .menu {
   width: 500px;
   display: none;
@@ -93,11 +93,13 @@ body {
   bottom: -1px;
   cursor: pointer;
   display: inline-block;
-  margin: 3px 3px 0 3px;
-  padding: 6px 12px;
+  margin: 3px 3px 0 10px;
+  padding: 6px 12px 6px 20px;
   font-weight: bold;
   font-size: larger;
   opacity: 0.4;
+  color: #808080;
+  background: url(img/tab-icon.png) no-repeat left center;
 }
 
 .tabs .tab.active {
@@ -283,6 +285,10 @@ body {
   cursor: pointer;
   display: block;
   z-index: 200;
+  opacity: 0.5;
+}
+#github:hover {
+  opacity: 1.0;
 }
 
 #github img {
@@ -292,48 +298,19 @@ body {
 
 #congestion {
   position: fixed;
-  top: 12px;
-  left: 310px;
-  /*width: 200px;*/
+  top: 10px;
+  right: 140px;
   width: auto;
-  /*height: 25px;*/
   z-index: 300;
-  /*border: 1px solid gray;*/
   overflow: hidden;
+  padding-left: 25px;
+  background: url(img/people.png) left center no-repeat;
 }
-
-/*#congestion .bar {
-  position: absolute;
-  background: gray;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 25%;
-}*/
 
 #congestion .rate {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 40px;
-	height: 27px;
-  text-align: center;
-}
-
-#congestion .rate span {
-  /*background: rgba(255, 255, 255, 0.7);
-  padding: 0 5px;
-  font-size: small;*/
-  
-	font-family: NotoSans;
-	font-size: 20px;
+  position: relative;
+  top: 1px;
+  font-size: 18px;
+  font-weight: bold;
 	color: #bf2327;
-}
-
-.crowdcongestion {
-  float: left;
-}
-
-.crowdcongestionrate {
-  float: right;
 }
