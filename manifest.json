@@ -2,6 +2,7 @@
   "manifest_version": 2,
 
   "name": "Rakuten Cafeteria Menu",
+  "short_name": "RakutenCafe",
   "description": "Shows a preview of the Rakuten Crimson House Cafeteria menus",
   "version": "0.4.0",
 
