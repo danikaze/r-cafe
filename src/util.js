@@ -66,7 +66,7 @@ function getJson(url, options) {
         data = JSON.stringify(data);
       }
       try {
-        json = JSON.parse(data);
+        const json = JSON.parse(data);
         resolve(json, xhr);
       } catch (error) {
         reject(xhr, error);
@@ -92,7 +92,7 @@ function request(url, options) {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+    xhr.open(options.post ? 'POST' : 'GET', url, true);
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
@@ -104,8 +104,12 @@ function request(url, options) {
       }
     };
 
+    if (options.post) {
+      xhr.setRequestHeader('Content-type', 'application/json');
+    }
+
     try {
-      xhr.send();
+      xhr.send(options.post && options.data ? JSON.stringify(options.data) : undefined);
     } catch (e) {
       reject(xhr, e);
     }
@@ -141,4 +145,21 @@ function each(object, callback) {
       callback(object[i], i);
     }
   }
+}
+
+/**
+ * @returns {String} Random type 4 uuid rfc-compliant
+ */
+function generateRandomUuid() {
+  let uuid = "";
+  let random;
+  for (let i = 0; i < 32; i++) {
+    random = Math.random() * 16 | 0;
+
+    if (i == 8 || i == 12 || i == 16 || i == 20) {
+      uuid += "-"
+    }
+    uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+  }
+  return uuid;
 }

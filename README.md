@@ -1,12 +1,18 @@
-# Rakuten Cafeteria Menu extension
+# Яakuten Cafeteria Menu extension
 
-Easily display what's in the Cafeteria of the Rakuten Crimson House without *JavaScript errors* ;)
+Easily display what's in the Cafeteria of the Яakuten Crimson House without *JavaScript errors* ;)
 
 ## How to install it in Chrome
 
-Get the extension in the [Chrome Store](http://bit.ly/rakuten-cafeteria-menu)
+Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-menu)
 
 ## Change log
+
+### 0.5.0
+- Display more information for each dish:
+  - _Umai_ count (number of likes)
+  - Nutritional information
+  - Included ingredients
 
 ### 0.4.0
 - New UI in the header icons/buttons

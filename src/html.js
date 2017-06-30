@@ -1,6 +1,9 @@
 (function(window, document) {
   'use strict';
 
+  const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
+  const URL_UMAI_DELETE = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/deleteumai`;
+
   const TIME_LUNCH = 1;
   const TIME_DINNER = 2;
 
@@ -12,6 +15,7 @@
   const ID_SHOW_DINNER = 'show-dinner';
   const ID_SHOW_LUNCH = 'show-lunch';
   const ID_CONGESTION = 'congestion';
+  const ID_DISH = 'menuId-{{ID}}';
   const CLASS_CONGESTION_RATE = 'rate';
   const CLASS_CONGESTION_BAR = 'bar';
   const CLASS_MENUS = 'menu';
@@ -24,13 +28,30 @@
   const CLASS_DISH = 'dish';
   const CLASS_DISH_NOT_FREE = 'paid';
   const CLASS_DISH_PRICE = 'price';
-  const CLASS_DISH_NAME = 'name';
+  const CLASS_DISH_NAME = 'dish-name';
   const CLASS_DISH_BOOTH = 'booth';
+  const CLASS_DISH_BOOTH_NAME = 'booth-name';
   const CLASS_DISH_CALORIES = 'calories';
   const CLASS_DISH_PREVIEW = 'preview';
+  const CLASS_DISH_COMPONENTS = 'components';
+  const CLASS_DISH_FAT = 'fat';
+  const CLASS_DISH_CARB = 'carb';
+  const CLASS_DISH_SODIUM = 'sodium';
+  const CLASS_DISH_PROTEIN = 'protein';
+  const CLASS_ICON = 'icon';
+  const CLASS_COMPONENT_NAME = 'component-name';
+  const CLASS_INGREDIENTS = 'ingredients';
+  const CLASS_INGREDIENT = 'ingredient';
+  const CLASS_INGREDIENT_NAME = 'ingredient-{{NAME}}';
+  const CLASS_UMAI = 'umai';
+  const CLASS_UMAI_OFF = 'umai-off';
+  const CLASS_UMAI_ON = 'umai-on';
+  const CLASS_UMAI_COUNT = 'umai-count';
 
   const containerElem = document.getElementById(ID_CONTAINER);
   const html = {};
+  const umaiInProgress = [];
+  let uuid;
   window.html = html;
 
   let activeFloor = null;
@@ -127,21 +148,106 @@
     return elem;
   }
 
+  function umaiHandler(element, menuId) {
+    // avoid double requests
+    if (umaiInProgress.indexOf(menuId) !== -1) {
+      return;
+    }
+    umaiInProgress.push(menuId);
+
+    const newStatus = element.classList.contains(CLASS_UMAI_OFF);
+    const oldClass = !newStatus ? CLASS_UMAI_ON : CLASS_UMAI_OFF;
+    const newClass = newStatus ? CLASS_UMAI_ON : CLASS_UMAI_OFF;
+    element.classList.remove(oldClass);
+    element.classList.add(newClass);
+    const countElem = element.getElementsByClassName(CLASS_UMAI_COUNT)[0];
+    countElem.innerHTML = parseInt(countElem.innerHTML, 10) + (newStatus ? 1 : -1);
+    const promise = newStatus ? postUmai(element, menuId) : deleteUmai(element, menuId);
+
+    promise.then(() => {
+      umaiInProgress.splice(umaiInProgress.indexOf(menuId), 1);
+    }).catch((error) => {
+      // undo changes
+      element.classList.remove(newClass);
+      element.classList.add(oldClass);
+      countElem.innerHTML = parseInt(countElem.innerHTML, 10) - (newStatus ? 1 : -1);
+      if (newStatus) {
+        window.storage.remove(`umai-${menuId}`);
+      } else {
+        window.storage.set(`umai-${menuId}`, 1);
+      }
+      umaiInProgress.splice(umaiInProgress.indexOf(menuId), 1);
+    });
+  }
+
+  function postUmai(element, menuId) {
+    window.storage.set(`umai-${menuId}`, 1);
+    return getJson(URL_UMAI_POST, {
+      post: true,
+      data: { menuId,  uuid }
+    });
+  }
+
+  function deleteUmai(element, menuId) {
+    window.storage.remove(`umai-${menuId}`);
+    return getJson(URL_UMAI_DELETE, {
+      post: true,
+      data: { menuId,  uuid }
+    });
+  }
+
   /**
    *
    * @param {*} dish
    * @param {*} parent
    */
   function createDish(dish, parent) {
+    function componentHtml(componentClass, componentName, value) {
+      return `<div class="${componentClass}">`
+               + `<div class="${CLASS_ICON}"></div>`
+               + `<span class="${CLASS_COMPONENT_NAME}">${componentName}</span> `
+               + `${value} gr.`
+             +'</div>';
+    }
+
+    function ingredientsHtml() {
+      const list = ['alcohol', 'beef', 'chicken', 'fish', 'healthy', 'mutton', 'pork'];
+      let html = `<div class="${CLASS_INGREDIENTS}">`;
+      list.forEach((ingredient) => {
+        if (dish.ingredients[ingredient]) {
+          const className = CLASS_INGREDIENT_NAME.replace('{{NAME}}', ingredient.toLowerCase());
+          const ingredientName = ingredient.substring(0, 1).toUpperCase() + ingredient.substring(1).toLowerCase();
+          html += `<div class="${CLASS_INGREDIENT} ${className}" title="${ingredientName}"></div>`;
+        }
+      });
+      return html + '</div>';
+    }
+
+    function umaiHtml() {
+      const status = !!window.storage.get(`umai-${dish.menuId}`);
+      const statusClass = status ? CLASS_UMAI_ON : CLASS_UMAI_OFF;
+      return `<div class="${CLASS_UMAI} ${statusClass}"><div class="${CLASS_ICON}"></div> <span class="${CLASS_UMAI_COUNT}">${dish.umaiCount}</span></div>`;
+    }
+
     const elem = document.createElement('div');
     const priceHtml = `<div class="${CLASS_DISH_PRICE}">${formatNumber(dish.price)}円</div>`
     const html = `<div class="${CLASS_DISH_PREVIEW}" style="background-image: url(${dish.imageURL})"></div>`
               + '<div class="details">'
-                + `<div class="${CLASS_DISH_BOOTH}"><div class="icon"></div><span class="name">${dish.menuType}</span></div>`
+                + `<div class="${CLASS_DISH_BOOTH}"><div class="${CLASS_ICON}"></div><span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span></div>`
                 + `<div class="${CLASS_DISH_NAME}">${dish.title}</div>`
                 + `<div class="${CLASS_DISH_CALORIES}">${dish.calories} kcal.</div>`
+                + `<div class="${CLASS_DISH_COMPONENTS}">`
+                  + componentHtml(CLASS_DISH_CARB, 'Carbs', dish.component.carb)
+                  + componentHtml(CLASS_DISH_FAT, 'Fat', dish.component.fat)
+                  + componentHtml(CLASS_DISH_PROTEIN, 'Protein', dish.component.protein)
+                  + componentHtml(CLASS_DISH_SODIUM, 'Sodium', dish.component.sodium)
+                + '</div>'
+                + ingredientsHtml()
                 + (dish.price ? priceHtml : '')
+                + umaiHtml()
               + '</div>';
+
+    elem.id = ID_DISH.replace('{{ID}}', dish.menuId);
     elem.classList.add(CLASS_DISH);
     elem.classList.add(dish.menuType.replace(/[ &]/g, '').toLowerCase());
     if (dish.price) {
@@ -149,6 +255,9 @@
     }
     elem.innerHTML = html;
     parent.appendChild(elem);
+
+    const umaiElem = elem.getElementsByClassName(CLASS_UMAI)[0];
+    umaiElem.addEventListener('click', () => umaiHandler(umaiElem, dish.menuId));
   }
 
   /**
@@ -232,7 +341,7 @@
   function createGitHubLink() {
     const html = '<img src="img/github.png" alt="Github">';
     const linkElem = createElementById('a', ID_GITHUB, html);
-    linkElem.href = 'https://github.com/danikaze/rakuten-cafeteria-menu';
+    linkElem.href = `https://github.com/danikaze/${'r'}a${'k'}u${'t'}e${'n'}-cafeteria-menu`;
     linkElem.title = 'Fork this extension in github!';
     linkElem.target = '_blank';
     return linkElem;
@@ -277,6 +386,7 @@
     showLunchElem.addEventListener('click', () => swap(lunch, dinner));
 
     containerElem.appendChild(createGitHubLink());
+    uuid = window.storage.get('uuid');
   };
 
   /**

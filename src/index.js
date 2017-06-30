@@ -1,7 +1,8 @@
 (function(window) {
   'use strict';
-  var request = new XMLHttpRequest();
-  var url = 'http://rakuten-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=' + getNumericDate();
+
+  const URL_DATA = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=${getNumericDate()}`;
+  const STORAGE_NAMESPACE = `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`;
   const DISH_ORDER = [
     'Main A',
     'Main B',
@@ -95,7 +96,7 @@
     const ajaxOptions = {
       mockData: window._mockData
     };
-    getJson(url, ajaxOptions)
+    getJson(URL_DATA, ajaxOptions)
       .then(processJson, processError)
       .then(() => {
         const currentHour = new Date().getHours();
@@ -111,5 +112,18 @@
       });
   }
 
+  function initialize() {
+    const storage = new Storage(STORAGE_NAMESPACE);
+    window.storage = storage;
+
+    if (storage.get('uuid')) {
+      return;
+    }
+
+    const uuid = generateRandomUuid();
+    storage.set('uuid', uuid);
+  }
+
+  initialize();
   start();
 }(window));

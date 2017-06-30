@@ -157,7 +157,7 @@ body {
   font-weight: bold;
 }
 
-.dishes .dish .booth .name {
+.dishes .dish .booth .booth-name {
   position: relative;
 }
 
@@ -195,16 +195,86 @@ body {
   display: inline-block;
 }
 
-.dishes .dish .name {
+.dishes .dish .dish-name {
   margin-top: 1em;
 }
 
 .dishes .dish .calories {
   margin-top: 0.5em;
   font-size: small;
+  font-weight: bold;
   color: #b7b7b7;
 }
 
+.dishes .dish .components {
+  font-size: small;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  color: #b7b7b7;
+}
+
+.dishes .dish .components .icon {
+  display: inline-block;
+  margin-right: 0.4em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  position: relative;
+  top: -1px;
+}
+.dishes .dish .carb .icon { background: #bbbbff; }
+.dishes .dish .fat .icon { background: #ffbbbb; }
+.dishes .dish .protein .icon { background: #ffeabb; }
+.dishes .dish .sodium .icon { background: #bbffbb; }
+
+.dish .ingredients {
+  margin-top: 0.5em;
+}
+
+.dish .ingredients .ingredient {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+
+.dish .ingredients .ingredient-alcohol { background-image: url(img/ingredient-alcohol.jpg); }
+.dish .ingredients .ingredient-beef { background-image: url(img/ingredient-beef.jpg); }
+.dish .ingredients .ingredient-chicken { background-image: url(img/ingredient-chicken.jpg); }
+.dish .ingredients .ingredient-fish { background-image: url(img/ingredient-fish.jpg); }
+.dish .ingredients .ingredient-healthy { background-image: url(img/ingredient-healthy.jpg); }
+.dish .ingredients .ingredient-mutton { background-image: url(img/ingredient-mutton.jpg); }
+.dish .ingredients .ingredient-pork { background-image: url(img/ingredient-pork.jpg); }
+
+.dish .umai-on,
+.dish .umai-off {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  font-size: small;
+  color: #fe94fe;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.dish .umai-off { color: #cacaca }
+
+.dish .umai-on .icon,
+.dish .umai-off .icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: bottom;
+  background-size: contain;
+  opacity: 0.5;
+  position: relative;
+  top: 1px;
+  background-image: url(img/heart-on.png);
+  background-size: cover;
+}
+.dish .umai-off .icon { background-image: url(img/heart-off.png); }
 
 .spinner {
   margin: 100px auto;

@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
 
-  "name": "Rakuten Cafeteria Menu",
-  "short_name": "RakutenCafe",
-  "description": "Shows a preview of the Rakuten Crimson House Cafeteria menus",
-  "version": "0.4.0",
+  "name": "Яakuten Cafeteria Menu",
+  "short_name": "ЯakutenCafe",
+  "description": "Shows a preview of the Яakuten Crimson House Cafeteria menus",
+  "version": "0.5.0",
 
   "icons": {
     "16": "icon16.png",
@@ -17,7 +17,7 @@
   "browser_action": {
     "default_icon": "icon128.png",
     "default_popup": "src/popup.html",
-    "default_title": "Show Rakuten Cafeteria menu"
+    "default_title": "Show Яakuten Cafeteria menu"
   },
   "permissions": ["http://*/*", "https://*/*"]
 }

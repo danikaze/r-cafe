@@ -1,6 +1,6 @@
 (function(window) {
   'use strict';
-  const url = "https://officerakuten.sharepoint.com/sites/GlobalPortal/_api/web/lists/getbytitle('Cafeteria%20Crowdedness%20Quantification')/items";
+  const url = `https://office${'r'}a${'k'}u${'t'}e${'n'}.sharepoint.com/sites/GlobalPortal/_api/web/lists/getbytitle('Cafeteria%20Crowdedness%20Quantification')/items`;
 
   const congestion = {};
   window.congestion = congestion;
