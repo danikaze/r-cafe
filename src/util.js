@@ -1,165 +1,190 @@
-/**
- * Does nothing
- * Returns undefined
- */
-function noop () {}
+((window) => {
+  'use strict';
 
-/**
- * Check if an object is a string
- *
- * @param   {*}       obj Object to check
- * @returns {Boolean}     true if {@link obj} is a string, false otherwise
- */
-function isString(obj) {
-  return typeof obj === "string" || obj instanceof String;
-}
-
-/**
- * Add {@link filler} until {@link text} length is {@link len}.
- * If {@link text.length} is originally greater or equal to {@link len}, nothing is done
- *
- * @param   {String} text   String to pad
- * @param   {Number} len    Desired length for {@link text}
- * @param   {String} filler 1 character length string to be added to the left of {@link text}
- * @returns {String}        padded string as padLeft("123", 5, 0) => "00123"
- *
- * @example padLeft("123", 5, "0"); // "00123"
- */
-function padLeft(text, len, filler) {
-  var i;
-  var n;
-  text = String(text);
-
-  if(filler === undefined) {
-    filler = '0';
+  /**
+   * Does nothing
+   * Returns undefined
+   */
+  function noop() {
   }
 
-  for(i = 0, n = len - text.length; i < n; i++) {
-    text = filler + text;
+  /**
+   * Check if an object is a string
+   *
+   * @param   {*}       obj Object to check
+   * @returns {Boolean}     true if {@link obj} is a string, false otherwise
+   */
+  function isString(obj) {
+    return typeof obj === 'string' || obj instanceof String;
   }
 
-  return text;
-}
+  /**
+   * Add {@link filler} until {@link text} length is {@link len}.
+   * If {@link text.length} is originally greater or equal to {@link len}, nothing is done
+   *
+   * @param   {String} text   String to pad
+   * @param   {Number} len    Desired length for {@link text}
+   * @param   {String} filler 1 character length string to be added to the left of {@link text}
+   * @returns {String}        padded string as padLeft("123", 5, 0) => "00123"
+   *
+   * @example padLeft("123", 5, "0"); // "00123"
+   */
+  function padLeft(text, len, filler) {
+    let i;
+    let n;
+    text = String(text);
 
-/**
- * @returns {String} Current date as YYYYMMDD
- */
-function getNumericDate() {
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = padLeft(date.getMonth() + 1, 2, '0');
-  var day = padLeft(date.getDate(), 2, '0');
-
-  return `${year}${month}${day}`;
-};
-
-/**
- * Opens a URL and load a JSON object
- *
- * @param   {String}  url URL to open
- * @returns {Promise}     Promise resolved to the JSON object
- */
-function getJson(url, options) {
-  return new Promise((resolve, reject) => {
-    function resolveJson([data, xhr]) {
-      if (!isString(data)) {
-        data = JSON.stringify(data);
-      }
-      try {
-        const json = JSON.parse(data);
-        resolve(json, xhr);
-      } catch (error) {
-        reject(xhr, error);
-      }
+    if (filler === undefined) {
+      filler = '0';
     }
 
-    request(url, options).then(resolveJson, reject);
-  });
-}
-
-/**
- * Request a URL and return the content as plain text
- *
- * @param   {String}  url       url to open
- * @param   {Object}  [options]
- * @returns {Promise}           Promise resolved to a String
- */
-function request(url, options) {
-  return new Promise((resolve, reject) => {
-    if (options.mockData) {
-      resolve(options.mockData);
-      return;
+    for (i = 0, n = len - text.length; i < n; i++) {
+      text = filler + text;
     }
 
-    var xhr = new XMLHttpRequest();
-    xhr.open(options.post ? 'POST' : 'GET', url, true);
+    return text;
+  }
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4) {
-        if (xhr.status >= 200 && xhr.status < 400) {
-          resolve([xhr.responseText, xhr]);
-        } else {
-          reject(xhr);
+  /**
+   * @returns {String} Current date as YYYYMMDD
+   */
+  function getNumericDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = padLeft(date.getMonth() + 1, 2, '0');
+    const day = padLeft(date.getDate(), 2, '0');
+
+    return `${year}${month}${day}`;
+  }
+
+  /**
+   * Opens a URL and load a JSON object
+   *
+   * @param   {String}  url URL to open
+   * @returns {Promise}     Promise resolved to the JSON object
+   */
+  function getJson(url, options) {
+    return new Promise((resolve, reject) => {
+      function resolveJson([data, xhr]) {
+        if (!isString(data)) {
+          data = JSON.stringify(data);
+        }
+        try {
+          const json = JSON.parse(data);
+          resolve(json, xhr);
+        } catch (error) {
+          reject(xhr, error);
         }
       }
-    };
 
-    if (options.post) {
-      xhr.setRequestHeader('Content-type', 'application/json');
-    }
-
-    try {
-      xhr.send(options.post && options.data ? JSON.stringify(options.data) : undefined);
-    } catch (e) {
-      reject(xhr, e);
-    }
-  });
-}
-
-/**
- * Format a number separating each 3 value with commas
- *
- * @param  {Number|String} value Value to format
- * @return {String}              Formatted value
- *
- * @example
- * formatNumber(12345678); // 12,345,678
- *
- */
-function formatNumber(value) {
-  if(value == null) {
-    return '';
+      request(url, options).then(resolveJson, reject);
+    });
   }
 
-  return (value + '').replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-};
+  /**
+   * Request a URL and return the content as plain text
+   *
+   * @param   {String}  url       url to open
+   * @param   {Object}  [options]
+   * @returns {Promise}           Promise resolved to a String
+   */
+  function request(url, options) {
+    return new Promise((resolve, reject) => {
+      options = options || {};
+      if (options.mockData) {
+        resolve(options.mockData);
+        return;
+      }
 
-/**
- *
- * @param {*} object
- * @param {*} callback as function(value, key)
- */
-function each(object, callback) {
-  for (let i in object) {
-    if (Object.prototype.hasOwnProperty.call(object, i)) {
-      callback(object[i], i);
+      const xhr = new XMLHttpRequest();
+      xhr.open(options.post ? 'POST' : 'GET', url, true);
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 400) {
+            resolve([xhr.responseText, xhr]);
+          } else {
+            reject(xhr);
+          }
+        }
+      };
+
+      if (options.post) {
+        xhr.setRequestHeader('Content-type', 'application/json');
+      }
+
+      try {
+        xhr.send(options.post && options.data ? JSON.stringify(options.data) : undefined);
+      } catch (e) {
+        reject(xhr, e);
+      }
+    });
+  }
+
+  /**
+   * Format a number separating each 3 value with commas
+   *
+   * @param  {Number|String} value Value to format
+   * @return {String}              Formatted value
+   *
+   * @example
+   * formatNumber(12345678); // 12,345,678
+   *
+   */
+  function formatNumber(value) {
+    if (value == null) {
+      return '';
+    }
+
+    return String(value).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+  }
+
+  /**
+   *
+   * @param {*} object
+   * @param {*} callback as function(value, key)
+   */
+  function each(object, callback) {
+    for (const i in object) {
+      if (Object.prototype.hasOwnProperty.call(object, i)) {
+        callback(object[i], i);
+      }
     }
   }
-}
 
-/**
- * @returns {String} Random type 4 uuid rfc-compliant
- */
-function generateRandomUuid() {
-  let uuid = "";
-  let random;
-  for (let i = 0; i < 32; i++) {
-    random = Math.random() * 16 | 0;
+  /**
+   * @returns {String} Random type 4 uuid rfc-compliant
+   */
+  function generateRandomUuid() {
+    let uuid = '';
+    let random;
+    for (let i = 0; i < 32; i++) {
+      random = Math.random() * 16 | 0;
 
-    if (i == 8 || i == 12 || i == 16 || i == 20) {
-      uuid += "-"
+      if (i === 8 || i === 12 || i === 16 || i === 20) {
+        uuid += '-';
+      }
+      if (i === 12) {
+        uuid += '4';
+      } else {
+        uuid += (i === 16 ? (random & 3 | 8) : random).toString(16);
+      }
     }
-    uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+    return uuid;
   }
-  return uuid;
-}
+
+  /*
+   * Export public members
+   */
+  window.util = {
+    noop,
+    isString,
+    padLeft,
+    getNumericDate,
+    getJson,
+    request,
+    formatNumber,
+    each,
+    generateRandomUuid,
+  };
+})(window);

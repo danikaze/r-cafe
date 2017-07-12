@@ -1,4 +1,5 @@
-(function(window, document) {
+/* global util */
+((window, document) => {
   'use strict';
 
   const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
@@ -17,7 +18,6 @@
   const ID_CONGESTION = 'congestion';
   const ID_DISH = 'menuId-{{ID}}';
   const CLASS_CONGESTION_RATE = 'rate';
-  const CLASS_CONGESTION_BAR = 'bar';
   const CLASS_MENUS = 'menu';
   const CLASS_TABS = 'tabs';
   const CLASS_TAB = 'tab';
@@ -49,10 +49,8 @@
   const CLASS_UMAI_COUNT = 'umai-count';
 
   const containerElem = document.getElementById(ID_CONTAINER);
-  const html = {};
   const umaiInProgress = [];
   let uuid;
-  window.html = html;
 
   let activeFloor = null;
   let congestionData = undefined;
@@ -62,7 +60,7 @@
    * @param {String} id
    */
   function removeElementById(id) {
-    let elem = document.getElementById(id);
+    const elem = document.getElementById(id);
     if (!elem) {
       return;
     }
@@ -93,7 +91,7 @@
   /**
    * Create and return the loading element
    */
-  html.showLoading = () => {
+  function showLoading() {
     const html = '<div class="spinner">'
                 + '<div class="rect1"></div>'
                 + '<div class="rect2"></div>'
@@ -103,33 +101,33 @@
               + '</div>';
     const elem = createElementById('div', ID_LOADING, html);
     containerElem.appendChild(elem);
-  };
+  }
 
   /**
    * Remove the loading element
    */
-  html.hideLoading = () => {
+  function hideLoading() {
     removeElementById(ID_LOADING);
-  };
+  }
 
   /**
    * Create and return the error element
    */
-  html.showError = () => {
+  function showError() {
     const html = '<p class="top">Error retrieving the data</p>'
               + '<p class="bottom">Click to retry</p>';
     const elem = createElementById('div', ID_ERROR, html);
     containerElem.appendChild(elem);
 
     return elem;
-  };
+  }
 
   /**
    * Remove the error element
    */
-  html.hideError = () => {
+  function hideError() {
     removeElementById(ID_ERROR);
-  };
+  }
 
   /**
    *
@@ -182,17 +180,17 @@
 
   function postUmai(element, menuId) {
     window.storage.set(`umai-${menuId}`, 1);
-    return getJson(URL_UMAI_POST, {
+    return util.getJson(URL_UMAI_POST, {
       post: true,
-      data: { menuId,  uuid }
+      data: { menuId, uuid },
     });
   }
 
   function deleteUmai(element, menuId) {
     window.storage.remove(`umai-${menuId}`);
-    return getJson(URL_UMAI_DELETE, {
+    return util.getJson(URL_UMAI_DELETE, {
       post: true,
-      data: { menuId,  uuid }
+      data: { menuId, uuid },
     });
   }
 
@@ -207,7 +205,7 @@
                + `<div class="${CLASS_ICON}"></div>`
                + `<span class="${CLASS_COMPONENT_NAME}">${componentName}</span> `
                + `${value} gr.`
-             +'</div>';
+             + '</div>';
     }
 
     function ingredientsHtml() {
@@ -220,20 +218,26 @@
           html += `<div class="${CLASS_INGREDIENT} ${className}" title="${ingredientName}"></div>`;
         }
       });
-      return html + '</div>';
+      return `${html}</div>`;
     }
 
     function umaiHtml() {
       const status = !!window.storage.get(`umai-${dish.menuId}`);
       const statusClass = status ? CLASS_UMAI_ON : CLASS_UMAI_OFF;
-      return `<div class="${CLASS_UMAI} ${statusClass}"><div class="${CLASS_ICON}"></div> <span class="${CLASS_UMAI_COUNT}">${dish.umaiCount}</span></div>`;
+      return `<div class="${CLASS_UMAI} ${statusClass}">`
+              + `<div class="${CLASS_ICON}"></div>`
+              + `<span class="${CLASS_UMAI_COUNT}">${dish.umaiCount}</span>`
+             + '</div>';
     }
 
     const elem = document.createElement('div');
-    const priceHtml = `<div class="${CLASS_DISH_PRICE}">${formatNumber(dish.price)}円</div>`
+    const priceHtml = `<div class="${CLASS_DISH_PRICE}">${util.formatNumber(dish.price)}円</div>`;
     const html = `<div class="${CLASS_DISH_PREVIEW}" style="background-image: url(${dish.imageURL})"></div>`
               + '<div class="details">'
-                + `<div class="${CLASS_DISH_BOOTH}"><div class="${CLASS_ICON}"></div><span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span></div>`
+                + `<div class="${CLASS_DISH_BOOTH}">`
+                  + `<div class="${CLASS_ICON}"></div>`
+                  + `<span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span>`
+                + '</div>'
                 + `<div class="${CLASS_DISH_NAME}">${dish.title}</div>`
                 + `<div class="${CLASS_DISH_CALORIES}">${dish.calories} kcal.</div>`
                 + `<div class="${CLASS_DISH_COMPONENTS}">`
@@ -310,7 +314,7 @@
     const dishesElem = document.createElement('div');
     dishesElem.classList.add(CLASS_DISHES);
 
-    each(data, location => {
+    util.each(data, location => {
       const tabElem = createTab(location, tabsElem);
       const contentElem = createTabContent(location, dishesElem);
       allTabs.push(tabElem);
@@ -320,7 +324,7 @@
         // const event = new Event('tabChange', { floor: tabElem.dataset.floor });
         // document.dispatchEvent(event);
         activeFloor = tabElem.dataset.floor;
-        html.setCongestion();
+        setCongestion();
         focusTab(tabElem, contentElem, allTabs, allContents);
       });
     });
@@ -336,7 +340,7 @@
   }
 
   /**
-   *
+   * @returns {DOM} <a> element
    */
   function createGitHubLink() {
     const html = '<img src="img/github.png" alt="Github">';
@@ -352,7 +356,7 @@
    * @param {Object}  name       Processed data
    * @param {Boolean} showDinner if <code>true</code> it will show by default the night menu instead of lunch
    */
-  html.showMenus = (data, showDinner) => {
+  function showMenus(data, showDinner) {
     function swap(show, hide) {
       hide.forEach(elem => {
         elem.classList.remove(CLASS_ACTIVE);
@@ -387,12 +391,12 @@
 
     containerElem.appendChild(createGitHubLink());
     uuid = window.storage.get('uuid');
-  };
+  }
 
   /**
    *
    */
-  html.setCongestion = (newData) => {
+  function setCongestion(newData) {
     removeElementById(ID_CONGESTION);
     if (newData) {
       congestionData = newData;
@@ -403,5 +407,17 @@
       elem.title = 'Ocuppation percentage';
       containerElem.appendChild(elem);
     }
+  }
+
+  /*
+   * Export public members
+   */
+  window.html = {
+    showLoading,
+    hideLoading,
+    showError,
+    hideError,
+    showMenus,
+    setCongestion,
   };
-}(window, document));
+})(window, document);

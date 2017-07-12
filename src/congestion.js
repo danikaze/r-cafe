@@ -1,9 +1,7 @@
-(function(window) {
+/* global request */
+((window) => {
   'use strict';
   const url = `https://office${'r'}a${'k'}u${'t'}e${'n'}.sharepoint.com/sites/GlobalPortal/_api/web/lists/getbytitle('Cafeteria%20Crowdedness%20Quantification')/items`;
-
-  const congestion = {};
-  window.congestion = congestion;
 
   /**
    * Get a list of the content of a xml tag
@@ -36,20 +34,17 @@
   /**
    * Return a Promise resolved to an object as { floor: congestionRate }
    */
-  congestion.get = function() {
+  function getCongestion() {
     return new Promise((resolve, reject) => {
-      const ajaxOptions = {
-        mockData: window._mockDataCongestion
-      };
-      request(url, ajaxOptions).then(([xml, xhr]) => {
+      request(url).then(([xml, xhr]) => {
         const items = getXmlTags(xml, '<m:properties>', '</m:properties>');
         const res = {};
         items.forEach((itemXml) => {
           const floor = getXmlTags(itemXml, '<d:Title>', '</d:Title>');
-          const updated = getXmlTags(itemXml, '<d:Modified m:type="Edm.DateTime">', '</d:Modified>');
+          // const updated = getXmlTags(itemXml, '<d:Modified m:type="Edm.DateTime">', '</d:Modified>');
           let rate = getXmlTags(itemXml, '<d:CongestionRate m:type="Edm.Double">', '</d:CongestionRate>');
           if (rate.length && floor.length) {
-            rate = parseInt(rate[0]);
+            rate = parseInt(rate[0], 10);
             if (!isNaN(rate)) {
               res[floor[0]] = Math.max(0, rate);
             }
@@ -59,6 +54,12 @@
         resolve(res);
       });
     });
-  };
+  }
 
-}(window));
+  /*
+   * Export public methods
+   */
+  window.congestion = {
+    get: getCongestion,
+  };
+})(window);
