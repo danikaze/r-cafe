@@ -8,6 +8,15 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.6.0
+- Floors are ordered now (in case API info is messed up)
+- Dishes can be sorted by their properties (booth type, kcal, carbs, fat, protein, sodium, likes)
+  - Click on the sorting type name to sort by the next type
+  - Shift + Click on the sorting type name to sort by the previous type
+  - Click on the arrow to change the sorting direction (asc/desc)
+- Cafeteria congestion data is shown even if the user is not logged in RAT (in selected hours)
+- Congestion icon CSS is fixed
+
 ### 0.5.0
 - Display more information for each dish:
   - _Umai_ count (number of likes)

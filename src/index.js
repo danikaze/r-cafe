@@ -1,33 +1,10 @@
-(function(window) {
+/* global util, html, congestion */
+((window) => {
   'use strict';
 
-  const URL_DATA = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=${getNumericDate()}`;
+  const URL_DATA = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=${util.getNumericDate()}`;
   const STORAGE_NAMESPACE = `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`;
-  const DISH_ORDER = [
-    'Main A',
-    'Main B',
-    'Main C',
-    'Bowl A',
-    'Bowl B',
-    'Grill',
-    'Pasta',
-    'Ramen',
-    'Udon & Soba',
-    'Halal'
-  ].map(id => { return id.toLowerCase() });
   const CONGESTION_UPDATE_INTERVAL = 10 * 1000;
-
-  /**
-   *
-   * @param {Object} a
-   * @param {Object} b
-   */
-  function menuSorter(a, b) {
-    let ai = DISH_ORDER.indexOf(a.menuType.toLowerCase());
-    let bi = DISH_ORDER.indexOf(b.menuType.toLowerCase());
-
-    return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
-  }
 
   /**
    *
@@ -67,12 +44,6 @@
       location.push(item);
     });
 
-    each(menus, time => {
-      each(time, menu => {
-        menu.sort(menuSorter);
-      });
-    });
-
     html.hideLoading();
     html.showMenus(menus, showDinner);
   }
@@ -93,22 +64,16 @@
   function start() {
     html.hideError();
     html.showLoading();
-    const ajaxOptions = {
-      mockData: window._mockData
-    };
-    getJson(URL_DATA, ajaxOptions)
+
+    util.getJson(URL_DATA)
       .then(processJson, processError)
       .then(() => {
-        const currentHour = new Date().getHours();
-        if (currentHour < 11 || (currentHour > 14 && currentHour < 19) || currentHour > 21) {
-          return;
-        }
         congestion.get().then((data) => {
           html.setCongestion(data);
           const intervalHandler = setInterval(() => {
             congestion.get().then(html.setCongestion, () => clearInterval(intervalHandler));
           }, CONGESTION_UPDATE_INTERVAL);
-        }, noop);
+        }, util.noop);
       });
   }
 
@@ -120,10 +85,10 @@
       return;
     }
 
-    const uuid = generateRandomUuid();
+    const uuid = util.generateRandomUuid();
     storage.set('uuid', uuid);
   }
 
   initialize();
   start();
-}(window));
+})(window);

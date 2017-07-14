@@ -1,4 +1,5 @@
-(function(window, document) {
+/* global util */
+((window, document) => {
   'use strict';
 
   const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
@@ -8,6 +9,13 @@
   const TIME_DINNER = 2;
 
   const ID_GITHUB = 'github';
+  const ID_SORT_CONTROLS_CONTAINER = 'sort-controls-container';
+  const ID_SORT_CONTROLS = 'sort-controls';
+  const ID_SORT_TYPE = 'sort-type';
+  const CLASS_SORTER = 'sorter-{{ID}}';
+  const CLASS_SORTER_ASC = 'asc';
+  const CLASS_SORTER_DESC = 'desc';
+  const ID_SORT_DIR = 'sort-direction';
   const ID_CONTAINER = 'container';
   const ID_LOADING = 'loading';
   const ID_ERROR = 'error';
@@ -16,8 +24,8 @@
   const ID_SHOW_LUNCH = 'show-lunch';
   const ID_CONGESTION = 'congestion';
   const ID_DISH = 'menuId-{{ID}}';
+  const ID_MENU_CONTENT = 'content-{{N}}';
   const CLASS_CONGESTION_RATE = 'rate';
-  const CLASS_CONGESTION_BAR = 'bar';
   const CLASS_MENUS = 'menu';
   const CLASS_TABS = 'tabs';
   const CLASS_TAB = 'tab';
@@ -49,20 +57,20 @@
   const CLASS_UMAI_COUNT = 'umai-count';
 
   const containerElem = document.getElementById(ID_CONTAINER);
-  const html = {};
   const umaiInProgress = [];
   let uuid;
-  window.html = html;
 
   let activeFloor = null;
   let congestionData = undefined;
+  let dishMenuCache = {}; // as #contentXX : [dishes]
+  let contentIdN = 0;
 
   /**
    * Remove an element given its id, if exists
    * @param {String} id
    */
   function removeElementById(id) {
-    let elem = document.getElementById(id);
+    const elem = document.getElementById(id);
     if (!elem) {
       return;
     }
@@ -93,7 +101,7 @@
   /**
    * Create and return the loading element
    */
-  html.showLoading = () => {
+  function showLoading() {
     const html = '<div class="spinner">'
                 + '<div class="rect1"></div>'
                 + '<div class="rect2"></div>'
@@ -103,33 +111,33 @@
               + '</div>';
     const elem = createElementById('div', ID_LOADING, html);
     containerElem.appendChild(elem);
-  };
+  }
 
   /**
    * Remove the loading element
    */
-  html.hideLoading = () => {
+  function hideLoading() {
     removeElementById(ID_LOADING);
-  };
+  }
 
   /**
    * Create and return the error element
    */
-  html.showError = () => {
+  function showError() {
     const html = '<p class="top">Error retrieving the data</p>'
               + '<p class="bottom">Click to retry</p>';
     const elem = createElementById('div', ID_ERROR, html);
     containerElem.appendChild(elem);
 
     return elem;
-  };
+  }
 
   /**
    * Remove the error element
    */
-  html.hideError = () => {
+  function hideError() {
     removeElementById(ID_ERROR);
-  };
+  }
 
   /**
    *
@@ -182,17 +190,17 @@
 
   function postUmai(element, menuId) {
     window.storage.set(`umai-${menuId}`, 1);
-    return getJson(URL_UMAI_POST, {
+    return util.getJson(URL_UMAI_POST, {
       post: true,
-      data: { menuId,  uuid }
+      data: { menuId, uuid },
     });
   }
 
   function deleteUmai(element, menuId) {
     window.storage.remove(`umai-${menuId}`);
-    return getJson(URL_UMAI_DELETE, {
+    return util.getJson(URL_UMAI_DELETE, {
       post: true,
-      data: { menuId,  uuid }
+      data: { menuId, uuid },
     });
   }
 
@@ -207,7 +215,7 @@
                + `<div class="${CLASS_ICON}"></div>`
                + `<span class="${CLASS_COMPONENT_NAME}">${componentName}</span> `
                + `${value} gr.`
-             +'</div>';
+             + '</div>';
     }
 
     function ingredientsHtml() {
@@ -220,20 +228,26 @@
           html += `<div class="${CLASS_INGREDIENT} ${className}" title="${ingredientName}"></div>`;
         }
       });
-      return html + '</div>';
+      return `${html}</div>`;
     }
 
     function umaiHtml() {
       const status = !!window.storage.get(`umai-${dish.menuId}`);
       const statusClass = status ? CLASS_UMAI_ON : CLASS_UMAI_OFF;
-      return `<div class="${CLASS_UMAI} ${statusClass}"><div class="${CLASS_ICON}"></div> <span class="${CLASS_UMAI_COUNT}">${dish.umaiCount}</span></div>`;
+      return `<div class="${CLASS_UMAI} ${statusClass}">`
+              + `<div class="${CLASS_ICON}"></div>`
+              + `<span class="${CLASS_UMAI_COUNT}">${dish.umaiCount}</span>`
+             + '</div>';
     }
 
     const elem = document.createElement('div');
-    const priceHtml = `<div class="${CLASS_DISH_PRICE}">${formatNumber(dish.price)}円</div>`
+    const priceHtml = `<div class="${CLASS_DISH_PRICE}">${util.formatNumber(dish.price)}円</div>`;
     const html = `<div class="${CLASS_DISH_PREVIEW}" style="background-image: url(${dish.imageURL})"></div>`
               + '<div class="details">'
-                + `<div class="${CLASS_DISH_BOOTH}"><div class="${CLASS_ICON}"></div><span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span></div>`
+                + `<div class="${CLASS_DISH_BOOTH}">`
+                  + `<div class="${CLASS_ICON}"></div>`
+                  + `<span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span>`
+                + '</div>'
                 + `<div class="${CLASS_DISH_NAME}">${dish.title}</div>`
                 + `<div class="${CLASS_DISH_CALORIES}">${dish.calories} kcal.</div>`
                 + `<div class="${CLASS_DISH_COMPONENTS}">`
@@ -266,10 +280,16 @@
    * @param {DOM}      parent
    */
   function createTabContent(data, parent) {
+    const contentId = ID_MENU_CONTENT.replace('{{N}}', ++contentIdN);
     const elem = document.createElement('div');
+
     elem.classList.add(CLASS_CONTENT);
+    elem.id = contentId;
+    data.sort(util.getSorterType().fn);
     data.forEach(dish => createDish(dish, elem));
     parent.appendChild(elem);
+
+    dishMenuCache[contentId] = data;
 
     return elem;
   }
@@ -310,17 +330,16 @@
     const dishesElem = document.createElement('div');
     dishesElem.classList.add(CLASS_DISHES);
 
-    each(data, location => {
+    Object.keys(data).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)).forEach((key) => {
+      const location = data[key];
       const tabElem = createTab(location, tabsElem);
       const contentElem = createTabContent(location, dishesElem);
       allTabs.push(tabElem);
       allContents.push(contentElem);
 
       tabElem.addEventListener('click', () => {
-        // const event = new Event('tabChange', { floor: tabElem.dataset.floor });
-        // document.dispatchEvent(event);
         activeFloor = tabElem.dataset.floor;
-        html.setCongestion();
+        setCongestion();
         focusTab(tabElem, contentElem, allTabs, allContents);
       });
     });
@@ -336,7 +355,53 @@
   }
 
   /**
+   * @returns {DOM} buttons to sort the menus
+   */
+  function createSorterElement() {
+    const html = createElementById('div', ID_SORT_CONTROLS_CONTAINER);
+    const controls = createElementById('div', ID_SORT_CONTROLS);
+    const sorterButton = createElementById('div', ID_SORT_TYPE);
+    const sorterDirection = createElementById('div', ID_SORT_DIR, '<div class="arrow"></div>');
+
+    sorterButton.addEventListener('click', (ev) => {
+      util.switchSorterType(ev.shiftKey ? -1 : 1);
+      updateSorterElement(sorterButton, sorterDirection);
+      resortMenus();
+    });
+    sorterDirection.addEventListener('click', (ev) => {
+      util.switchSorterDirection();
+      updateSorterElement(sorterButton, sorterDirection);
+      resortMenus();
+    });
+
+    updateSorterElement(sorterButton, sorterDirection);
+    controls.appendChild(sorterButton);
+    controls.appendChild(sorterDirection);
+    html.appendChild(controls);
+
+    return html;
+  }
+
+  /**
+   * Update the sorter controls class names and titles
    *
+   * @param {DOM} [sorterTypeElem]
+   * @param {DOM} [sorterDirectionElem]
+   */
+  function updateSorterElement(sorterTypeElem, sorterDirectionElem) {
+    const currentSorterType = util.getSorterType();
+    const currentSorterDirection = util.getSorterDirection();
+    sorterTypeElem = sorterTypeElem || document.getElementById(ID_SORT_TYPE);
+    sorterDirectionElem = sorterDirectionElem || document.getElementById(ID_SORT_DIR);
+
+    sorterTypeElem.innerHTML = currentSorterType.name;
+    sorterTypeElem.className = CLASS_SORTER.replace('{{ID}}', currentSorterType.id);
+    sorterTypeElem.title = currentSorterType.title;
+    sorterDirectionElem.className = currentSorterDirection ? CLASS_SORTER_DESC : CLASS_SORTER_ASC;
+  }
+
+  /**
+   * @returns {DOM} <a> element
    */
   function createGitHubLink() {
     const html = '<img src="img/github.png" alt="Github">';
@@ -352,7 +417,7 @@
    * @param {Object}  name       Processed data
    * @param {Boolean} showDinner if <code>true</code> it will show by default the night menu instead of lunch
    */
-  html.showMenus = (data, showDinner) => {
+  function showMenus(data, showDinner) {
     function swap(show, hide) {
       hide.forEach(elem => {
         elem.classList.remove(CLASS_ACTIVE);
@@ -385,23 +450,53 @@
     showDinnerElem.addEventListener('click', () => swap(dinner, lunch));
     showLunchElem.addEventListener('click', () => swap(lunch, dinner));
 
+    containerElem.appendChild(createSorterElement());
+
     containerElem.appendChild(createGitHubLink());
     uuid = window.storage.get('uuid');
-  };
+  }
+
+  /**
+   * Resort dishes in all menus
+   */
+  function resortMenus() {
+    const sortDirection = util.getSorterDirection();
+    const sortType = util.getSorterType();
+
+    Object.keys(dishMenuCache).forEach((parentId) => {
+      const parent = document.getElementById(parentId);
+      const data = dishMenuCache[parentId];
+      data.sort(sortType.fn).forEach((dish) => {
+        parent.appendChild(document.getElementById(ID_DISH.replace('{{ID}}', dish.menuId)));
+      });
+    });
+  }
 
   /**
    *
    */
-  html.setCongestion = (newData) => {
+  function setCongestion(newData) {
     removeElementById(ID_CONGESTION);
     if (newData) {
       congestionData = newData;
     }
-    const rate = congestionData && congestionData[activeFloor];
-    if (rate !== undefined) {
-      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${rate}%</span>`);
+    const data = congestionData && congestionData[activeFloor];
+    if (data !== undefined && data.rate) {
+      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${data.rate}%</span>`);
       elem.title = 'Ocuppation percentage';
       containerElem.appendChild(elem);
     }
+  }
+
+  /*
+   * Export public members
+   */
+  window.html = {
+    showLoading,
+    hideLoading,
+    showError,
+    hideError,
+    showMenus,
+    setCongestion,
   };
-}(window, document));
+})(window, document);

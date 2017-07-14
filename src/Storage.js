@@ -232,4 +232,5 @@
   }
 
   window.Storage = Storage;
+  purge(window.localStorage);
 }(window));
