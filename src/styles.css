@@ -83,9 +83,6 @@ body {
   height: 24px;
   z-index: 100;
   padding: 2px 10px 13px 0px;
-  background: #ffffff;
-  width: 100%;
-  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16);
 }
 
 .tabs .tab {
@@ -271,6 +268,7 @@ body {
   opacity: 0.5;
   position: relative;
   top: 1px;
+  right: 3px;
   background-image: url(img/heart-on.png);
   background-size: cover;
 }
@@ -375,6 +373,7 @@ body {
   overflow: hidden;
   padding-left: 25px;
   background: url(img/people.png) left center no-repeat;
+  background-size: contain;
 }
 
 #congestion .rate {
@@ -383,4 +382,65 @@ body {
   font-size: 18px;
   font-weight: bold;
 	color: #bf2327;
+}
+
+#sort-controls-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  background: #ffffff;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16);
+  z-index: 50;
+  text-align: center;
+}
+
+#sort-controls {
+  position: relative;
+  top: 6px;
+}
+
+#sort-type {
+  font-size: 0.75em;
+  font-weight: bold;
+  background: #d8d8d8;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 3px 23px 3px 9px;
+  border-radius: 9px;
+  color: #fff;
+  user-select: none;
+}
+
+#sort-direction {
+  width: 14px;
+  height: 14px;
+  background: #a7a7a7;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  right: 23px;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  top: 5px;
+}
+#sort-direction .arrow {
+  width: 0;
+  height: 0;
+  position: relative;
+  border: solid transparent;
+}
+#sort-direction.asc .arrow {
+  top: 3px;
+  left: 3px;
+  border-width: 0 4px 6.9px 4px;
+  border-bottom-color: #fff;
+}
+#sort-direction.desc .arrow {
+  top: 4px;
+  left: 3px;
+  border-width: 6.9px 4px 0 4px;
+  border-top-color: #fff;
 }

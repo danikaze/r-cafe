@@ -4,31 +4,7 @@
 
   const URL_DATA = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=${util.getNumericDate()}`;
   const STORAGE_NAMESPACE = `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`;
-  const DISH_ORDER = [
-    'Main A',
-    'Main B',
-    'Main C',
-    'Bowl A',
-    'Bowl B',
-    'Grill',
-    'Pasta',
-    'Ramen',
-    'Udon & Soba',
-    'Halal',
-  ].map(id => id.toLowerCase());
   const CONGESTION_UPDATE_INTERVAL = 10 * 1000;
-
-  /**
-   *
-   * @param {Object} a
-   * @param {Object} b
-   */
-  function menuSorter(a, b) {
-    const ai = DISH_ORDER.indexOf(a.menuType.toLowerCase());
-    const bi = DISH_ORDER.indexOf(b.menuType.toLowerCase());
-
-    return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
-  }
 
   /**
    *
@@ -68,12 +44,6 @@
       location.push(item);
     });
 
-    util.each(menus, time => {
-      util.each(time, menu => {
-        menu.sort(menuSorter);
-      });
-    });
-
     html.hideLoading();
     html.showMenus(menus, showDinner);
   }
@@ -98,10 +68,6 @@
     util.getJson(URL_DATA)
       .then(processJson, processError)
       .then(() => {
-        const currentHour = new Date().getHours();
-        if (currentHour < 11 || (currentHour > 14 && currentHour < 19) || currentHour > 21) {
-          return;
-        }
         congestion.get().then((data) => {
           html.setCongestion(data);
           const intervalHandler = setInterval(() => {

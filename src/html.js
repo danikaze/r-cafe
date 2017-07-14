@@ -9,6 +9,13 @@
   const TIME_DINNER = 2;
 
   const ID_GITHUB = 'github';
+  const ID_SORT_CONTROLS_CONTAINER = 'sort-controls-container';
+  const ID_SORT_CONTROLS = 'sort-controls';
+  const ID_SORT_TYPE = 'sort-type';
+  const CLASS_SORTER = 'sorter-{{ID}}';
+  const CLASS_SORTER_ASC = 'asc';
+  const CLASS_SORTER_DESC = 'desc';
+  const ID_SORT_DIR = 'sort-direction';
   const ID_CONTAINER = 'container';
   const ID_LOADING = 'loading';
   const ID_ERROR = 'error';
@@ -17,6 +24,7 @@
   const ID_SHOW_LUNCH = 'show-lunch';
   const ID_CONGESTION = 'congestion';
   const ID_DISH = 'menuId-{{ID}}';
+  const ID_MENU_CONTENT = 'content-{{N}}';
   const CLASS_CONGESTION_RATE = 'rate';
   const CLASS_MENUS = 'menu';
   const CLASS_TABS = 'tabs';
@@ -54,6 +62,8 @@
 
   let activeFloor = null;
   let congestionData = undefined;
+  let dishMenuCache = {}; // as #contentXX : [dishes]
+  let contentIdN = 0;
 
   /**
    * Remove an element given its id, if exists
@@ -270,10 +280,16 @@
    * @param {DOM}      parent
    */
   function createTabContent(data, parent) {
+    const contentId = ID_MENU_CONTENT.replace('{{N}}', ++contentIdN);
     const elem = document.createElement('div');
+
     elem.classList.add(CLASS_CONTENT);
+    elem.id = contentId;
+    data.sort(util.getSorterType().fn);
     data.forEach(dish => createDish(dish, elem));
     parent.appendChild(elem);
+
+    dishMenuCache[contentId] = data;
 
     return elem;
   }
@@ -314,15 +330,14 @@
     const dishesElem = document.createElement('div');
     dishesElem.classList.add(CLASS_DISHES);
 
-    util.each(data, location => {
+    Object.keys(data).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)).forEach((key) => {
+      const location = data[key];
       const tabElem = createTab(location, tabsElem);
       const contentElem = createTabContent(location, dishesElem);
       allTabs.push(tabElem);
       allContents.push(contentElem);
 
       tabElem.addEventListener('click', () => {
-        // const event = new Event('tabChange', { floor: tabElem.dataset.floor });
-        // document.dispatchEvent(event);
         activeFloor = tabElem.dataset.floor;
         setCongestion();
         focusTab(tabElem, contentElem, allTabs, allContents);
@@ -337,6 +352,52 @@
     elem.appendChild(dishesElem);
 
     return elem;
+  }
+
+  /**
+   * @returns {DOM} buttons to sort the menus
+   */
+  function createSorterElement() {
+    const html = createElementById('div', ID_SORT_CONTROLS_CONTAINER);
+    const controls = createElementById('div', ID_SORT_CONTROLS);
+    const sorterButton = createElementById('div', ID_SORT_TYPE);
+    const sorterDirection = createElementById('div', ID_SORT_DIR, '<div class="arrow"></div>');
+
+    sorterButton.addEventListener('click', (ev) => {
+      util.switchSorterType(ev.shiftKey ? -1 : 1);
+      updateSorterElement(sorterButton, sorterDirection);
+      resortMenus();
+    });
+    sorterDirection.addEventListener('click', (ev) => {
+      util.switchSorterDirection();
+      updateSorterElement(sorterButton, sorterDirection);
+      resortMenus();
+    });
+
+    updateSorterElement(sorterButton, sorterDirection);
+    controls.appendChild(sorterButton);
+    controls.appendChild(sorterDirection);
+    html.appendChild(controls);
+
+    return html;
+  }
+
+  /**
+   * Update the sorter controls class names and titles
+   *
+   * @param {DOM} [sorterTypeElem]
+   * @param {DOM} [sorterDirectionElem]
+   */
+  function updateSorterElement(sorterTypeElem, sorterDirectionElem) {
+    const currentSorterType = util.getSorterType();
+    const currentSorterDirection = util.getSorterDirection();
+    sorterTypeElem = sorterTypeElem || document.getElementById(ID_SORT_TYPE);
+    sorterDirectionElem = sorterDirectionElem || document.getElementById(ID_SORT_DIR);
+
+    sorterTypeElem.innerHTML = currentSorterType.name;
+    sorterTypeElem.className = CLASS_SORTER.replace('{{ID}}', currentSorterType.id);
+    sorterTypeElem.title = currentSorterType.title;
+    sorterDirectionElem.className = currentSorterDirection ? CLASS_SORTER_DESC : CLASS_SORTER_ASC;
   }
 
   /**
@@ -389,8 +450,26 @@
     showDinnerElem.addEventListener('click', () => swap(dinner, lunch));
     showLunchElem.addEventListener('click', () => swap(lunch, dinner));
 
+    containerElem.appendChild(createSorterElement());
+
     containerElem.appendChild(createGitHubLink());
     uuid = window.storage.get('uuid');
+  }
+
+  /**
+   * Resort dishes in all menus
+   */
+  function resortMenus() {
+    const sortDirection = util.getSorterDirection();
+    const sortType = util.getSorterType();
+
+    Object.keys(dishMenuCache).forEach((parentId) => {
+      const parent = document.getElementById(parentId);
+      const data = dishMenuCache[parentId];
+      data.sort(sortType.fn).forEach((dish) => {
+        parent.appendChild(document.getElementById(ID_DISH.replace('{{ID}}', dish.menuId)));
+      });
+    });
   }
 
   /**
@@ -401,9 +480,9 @@
     if (newData) {
       congestionData = newData;
     }
-    const rate = congestionData && congestionData[activeFloor];
-    if (rate !== undefined) {
-      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${rate}%</span>`);
+    const data = congestionData && congestionData[activeFloor];
+    if (data !== undefined && data.rate) {
+      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${data.rate}%</span>`);
       elem.title = 'Ocuppation percentage';
       containerElem.appendChild(elem);
     }

@@ -1,6 +1,58 @@
 ((window) => {
   'use strict';
 
+  const DISH_ORDER = [
+    'Main A',
+    'Main B',
+    'Main C',
+    'Bowl A',
+    'Bowl B',
+    'Grill',
+    'Pasta',
+    'Ramen',
+    'Udon & Soba',
+    'Halal',
+  ].map(id => id.toLowerCase());
+
+  const sorterTypes = [{
+    id: 'booth',
+    name: 'Booth',
+    title: 'Sorting by Booth type',
+    fn: menuSorterProperty.bind(null, (obj) => DISH_ORDER.indexOf(obj.menuType.toLowerCase())),
+  }, {
+    id: 'kcal',
+    name: 'Kcal',
+    title: 'Sorting by Calory quantity',
+    fn: menuSorterProperty.bind(null, (obj) => obj.calories),
+  }, {
+    id: 'carbs',
+    name: 'Carbs',
+    title: 'Sorting by Carbs quantity',
+    fn: menuSorterProperty.bind(null, (obj) => obj.component.carb),
+  }, {
+    id: 'fat',
+    name: 'Fats',
+    title: 'Sorting by Fat quantity',
+    fn: menuSorterProperty.bind(null, (obj) => obj.component.fat),
+  }, {
+    id: 'protein',
+    name: 'Proteins',
+    title: 'Sorting by Protein quantity',
+    fn: menuSorterProperty.bind(null, (obj) => obj.component.protein),
+  }, {
+    id: 'sodium',
+    name: 'Sodium',
+    title: 'Sorting by Sodium quantity',
+    fn: menuSorterProperty.bind(null, (obj) => obj.component.sodium),
+  }, {
+    id: 'umai',
+    name: 'Umai',
+    title: 'Sorting by number of Likes',
+    fn: menuSorterProperty.bind(null, (obj) => obj.umaiCount),
+  }];
+  let currentSorterType = 0;
+  let currentSorterDirection = false;
+
   /**
    * Does nothing
    * Returns undefined
@@ -173,6 +225,59 @@
     return uuid;
   }
 
+  /**
+   * Sorter based on generic properties
+   *
+   * @param {Function} getProperty function(object) returning the object property value to compare
+   * @param {Object}   a           First object to compare
+   * @param {Object}   b           Second object to compare
+   */
+  function menuSorterProperty(getProperty, a, b) {
+    const av = parseInt(getProperty(a), 10);
+    const bv = parseInt(getProperty(b), 10);
+
+    return (av - bv) * (currentSorterDirection ? -1 : 1);
+  }
+
+  /**
+   * Update and return the sorter type
+   *
+   * @param {Number} delta If `1`/`-1`, it will move to the next/prev one
+   * @returns {Object} Sorter as `{ id, title, fn }`
+   */
+  function switchSorterType(delta) {
+    currentSorterType = (currentSorterType + sorterTypes.length + delta) % sorterTypes.length;
+
+    return sorterTypes[currentSorterType];
+  }
+
+  /**
+   * Update and return the sorter direction
+   *
+   * @param {Boolean} init If `true` will initialize it. If not, it will switch the direction to the other one
+   * @returns {Boolean} `true` for ascending, `false` for descending direction.
+   */
+  function switchSorterDirection(init) {
+    if (!init) {
+      currentSorterDirection = !currentSorterDirection;
+    }
+    return currentSorterDirection;
+  }
+
+  /**
+   * @returns {Object} Sorter as `{ id, title, fn }`
+   */
+  function getSorterType() {
+    return sorterTypes[currentSorterType];
+  }
+
+  /**
+   * @returns {Boolean} `true` for ascending, `false` for descending direction.
+   */
+  function getSorterDirection() {
+    return currentSorterDirection;
+  }
+
   /*
    * Export public members
    */
@@ -186,5 +291,9 @@
     formatNumber,
     each,
     generateRandomUuid,
+    switchSorterType,
+    switchSorterDirection,
+    getSorterType,
+    getSorterDirection,
   };
 })(window);
