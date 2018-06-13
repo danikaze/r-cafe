@@ -8,7 +8,6 @@
   const TIME_LUNCH = 1;
   const TIME_DINNER = 2;
 
-  const ID_GITHUB = 'github';
   const ID_SORT_CONTROLS_CONTAINER = 'sort-controls-container';
   const ID_SORT_CONTROLS = 'sort-controls';
   const ID_SORT_TYPE = 'sort-type';
@@ -401,18 +400,6 @@
   }
 
   /**
-   * @returns {DOM} <a> element
-   */
-  function createGitHubLink() {
-    const html = '<img src="img/github.png" alt="Github">';
-    const linkElem = createElementById('a', ID_GITHUB, html);
-    linkElem.href = `https://github.com/danikaze/${'r'}a${'k'}u${'t'}e${'n'}-cafeteria-menu`;
-    linkElem.title = 'Fork this extension in github!';
-    linkElem.target = '_blank';
-    return linkElem;
-  }
-
-  /**
    * Create the html to show all the menus
    * @param {Object}  name       Processed data
    * @param {Boolean} showDinner if <code>true</code> it will show by default the night menu instead of lunch
@@ -452,7 +439,6 @@
 
     containerElem.appendChild(createSorterElement());
 
-    containerElem.appendChild(createGitHubLink());
     uuid = window.storage.get('uuid');
   }
 

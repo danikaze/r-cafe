@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.6.1
+- Remove github link
+
 ### 0.6.0
 - Floors are ordered now (in case API info is messed up)
 - Dishes can be sorted by their properties (booth type, kcal, carbs, fat, protein, sodium, likes)
