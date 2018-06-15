@@ -145,10 +145,6 @@
    * @param {object} detailData
    */
   function getRapDish(menuData, detailData, cafeteria) {
-    if (!menuData || !detailData || !cafeteria) {
-      return undefined;
-    }
-
     return new Promise((resolve, reject) => {
       const dish = {
         cafeteriaId: cafeteria.id,
@@ -207,11 +203,13 @@
           const promises = [];
           menuData.d.results.forEach((dish) => {
             const details = detailData.d.results.filter((d) => d.Id === dish.MenuId);
-            const dishPromise = getRapDish(dish, details[0], cafeteria).then((dish) => {
-              results[dish.timezone][cafeteria.displayName].push(dish);
-              return dish;
-            });
-            promises.push(dishPromise);
+            if (details.length > 0) {
+              const dishPromise = getRapDish(dish, details[0], cafeteria).then((dish) => {
+                results[dish.timezone][cafeteria.displayName].push(dish);
+                return dish;
+              });
+              promises.push(dishPromise);
+            }
           });
 
           Promise.all(promises).then(resolve);
