@@ -4,6 +4,7 @@
 
   const types = [];
 
+  const MENU_CACHE_TTL = 12 * 3600; // 12h
   const TIMEZONES = ['Lunch', 'Dinner'];
   const URL_API = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate={DATE}`;
   const SERVER_URL = `https://office${'r'}a${'k'}u${'t'}e${'n'}.sharepoint.com`;
@@ -234,7 +235,15 @@
    * Retrieve the menu data from RAP
    */
   function getMenusFromRap() {
-    return new Promise((resolve, reject) => {
+    let cacheKey;
+    let cachedData;
+
+    if (constants.ENABLE_MENU_CACHE) {
+      cacheKey = `menus-rap-${util.getNumericDate()}`;
+      cachedData = storage.get(cacheKey);
+    }
+
+    const requestPromise = new Promise((resolve, reject) => {
       const date = util.getAmericanDate();
       const promises = [];
       const results = {}
@@ -260,9 +269,16 @@
       });
 
       Promise.all(promises)
-        .then(() => { resolve(results) })
+        .then(() => {
+          if (constants.ENABLE_MENU_CACHE) {
+            storage.set(cacheKey, results, MENU_CACHE_TTL);
+          }
+          resolve(results);
+        })
         .catch(reject);
     });
+
+    return cachedData ? Promise.resolve(cachedData) : requestPromise;
   }
 
   /**
@@ -273,9 +289,6 @@
       // Promise.all([getMenusFromApi(), getMenusFromRap()])
       //   .then(([apiData, rapData]) => util.extend(apiData, rapData))
       getMenusFromRap()
-        // .then((menus) => {
-        //   storage.
-        // })
         .then(resolve)
         .catch(reject);
     });
