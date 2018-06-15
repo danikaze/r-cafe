@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.0
+- Read the menu information from RAP instead of the API
+
 ### 0.6.1
 - Remove github link
 

@@ -5,7 +5,6 @@
   const URL_JSON_9F = `http://p${2}${3}${3}${9}${5}/cafe_crowd/data/9F/crowd_rate.json`;
   const URL_JSON_22F = `http://p${2}${3}${3}${9}${5}/cafe_crowd/data/22F/crowd_rate.json`;
 
-
   /**
    * Get a list of the content of a xml tag
    *
@@ -72,15 +71,14 @@
   function getCongestionJson() {
     const res = {};
     let done = 0;
-    const promise9f = util.request(URL_JSON_9F);
-    const promise22f = util.request(URL_JSON_22F);
+    const promise9f = util.getJson(URL_JSON_9F);
+    const promise22f = util.getJson(URL_JSON_22F);
 
-    function getResponse(floor, resolve, reject, [response, xhr]) {
+    function getResponse(floor, resolve, reject, data) {
       try {
-        const json = JSON.parse(response);
-        res[`${floor}F`] = {
-          rate: json.crowd_rate,
-          time: json.unixtime * 1000,
+        res[`${floor}f`] = {
+          rate: data.crowd_rate,
+          time: data.unixtime * 1000,
         };
         done++;
         if (done === 2) {
@@ -101,7 +99,7 @@
    * @returns {Promise} resolved to an object as { floor: { rate, time } }
    */
   function getCongestion() {
-    const currentHour = new Date().getHours();
+    const currentHour = 12; // new Date().getHours();
     if (currentHour < 11 || (currentHour > 14 && currentHour < 19) || currentHour > 21) {
       return Promise.reject();
     }

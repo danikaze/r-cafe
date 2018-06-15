@@ -2,60 +2,25 @@
 ((window) => {
   'use strict';
 
-  const URL_DATA = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate=${util.getNumericDate()}`;
   const STORAGE_NAMESPACE = `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`;
   const CONGESTION_UPDATE_INTERVAL = 10 * 1000;
 
   /**
    *
-   * @param {*} response
-   */
-  function processJson(response) {
-    if (!response.data || response.errorMessage) {
-      processError();
-      return;
-    }
-
-    const menus = {};
-    const currentHour = new Date().getHours();
-    const showDinner = currentHour > 13;
-
-    // API is shit and menuID is different even for duplicated elements, so we filter manually
-    const uniques = [];
-
-    response.data.forEach(item => {
-      const key = `${item.cafeteriaId}:${item.mealTime}:${item.title}`;
-      if (uniques.indexOf(key) !== -1) {
-        return;
-      }
-      uniques.push(key);
-
-      let time = menus[item.mealTime];
-      if (!time) {
-        time = {};
-        menus[item.mealTime] = time;
-      }
-
-      let location = time[item.cafeteriaId];
-      if (!location) {
-        location = [];
-        time[item.cafeteriaId] = location;
-      }
-      location.push(item);
-    });
-
-    html.hideLoading();
-    html.showMenus(menus, showDinner);
-  }
-
-  /**
-   *
    * @param {*} xhr
    */
-  function processError(xhr) {
+  function menuLoadingError(xhr) {
     html.hideLoading();
     const elem = html.showError();
     elem.addEventListener('click', start);
+  }
+
+  /**
+   * @return `true` if the diner needs to be shown, `false` for lunch time
+   */
+  function isDinerTime() {
+    const currentHour = new Date().getHours();
+    return currentHour >= 14;
   }
 
   /**
@@ -65,8 +30,13 @@
     html.hideError();
     html.showLoading();
 
-    util.getJson(URL_DATA)
-      .then(processJson, processError)
+    menus.get()
+      .then((menus) => {
+        console.log('menus', menus);
+        html.hideLoading();
+        html.showMenus(menus, isDinerTime());
+      })
+      // .catch(menuLoadingError)
       .then(() => {
         congestion.get().then((data) => {
           html.setCongestion(data);
@@ -77,6 +47,9 @@
       });
   }
 
+  /**
+   *
+   */
   function initialize() {
     const storage = new Storage(STORAGE_NAMESPACE);
     window.storage = storage;

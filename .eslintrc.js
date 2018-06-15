@@ -1,15 +1,18 @@
 module.exports = {
   extends: 'airbnb',
-  installedESLint: true,
   parserOptions: {
-    sourceType: 'script',
+    sourceType: 'module',
     globalReturn: true,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    },
   },
   env: {
     browser: true,
   },
   rules: {
-    strict: ['error', 'function'],
+    'arrow-parens': ['error', 'always'],
+    strict: ['error', 'global'],
     'spaced-comment': ['error', 'always', {
       exceptions: ['/'],
     }],
@@ -26,14 +29,19 @@ module.exports = {
       functions: false,
     }],
     'no-plusplus': 'off',
-    'no-restricted-syntax': [ // allows for-in
+    'no-restricted-syntax': [ // allows for-in & for-of
       'error',
-      'ForOfStatement',
       'LabeledStatement',
       'WithStatement',
     ],
     'no-empty': ['error', {
       allowEmptyCatch: true,
+    }],
+    'import/extensions': ['error', 'always', {
+      'js': 'never',
+      'ts': 'never',
+      'jsx': 'never',
+      'tsx': 'never',
     }],
   },
 };

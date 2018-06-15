@@ -1,12 +1,9 @@
-/* global util */
+/* global util, constants */
 ((window, document) => {
   'use strict';
 
   const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
   const URL_UMAI_DELETE = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/deleteumai`;
-
-  const TIME_LUNCH = 1;
-  const TIME_DINNER = 2;
 
   const ID_SORT_CONTROLS_CONTAINER = 'sort-controls-container';
   const ID_SORT_CONTROLS = 'sort-controls';
@@ -147,7 +144,7 @@
     const elem = document.createElement('li');
     elem.classList.add(CLASS_TAB);
     elem.classList.add(CLASS_TAB_ID.replace('{{ID}}', data[0].cafeteriaId));
-    elem.innerHTML = `${data[0].cafeteriaId}`;
+    elem.innerHTML = `${data[0].cafeteriaName}`;
 
     elem.dataset.floor = data[0].cafeteriaId;
     parent.appendChild(elem);
@@ -257,7 +254,7 @@
                 + '</div>'
                 + ingredientsHtml()
                 + (dish.price ? priceHtml : '')
-                + umaiHtml()
+                + (dish.umaiCount ? umaiHtml() : '')
               + '</div>';
 
     elem.id = ID_DISH.replace('{{ID}}', dish.menuId);
@@ -270,7 +267,9 @@
     parent.appendChild(elem);
 
     const umaiElem = elem.getElementsByClassName(CLASS_UMAI)[0];
-    umaiElem.addEventListener('click', () => umaiHandler(umaiElem, dish.menuId));
+    if (umaiElem) {
+      umaiElem.addEventListener('click', () => umaiHandler(umaiElem, dish.menuId));
+    }
   }
 
   /**
@@ -313,6 +312,16 @@
   }
 
   /**
+   * Sorter to get the cafeterias in the order defined in `CAFETERIAS_DISPLAY_ORDER` via `Array.sort`
+   */
+  function cafeteriasSorter(a, b) {
+    const ia = constants.CAFETERIAS_DISPLAY_ORDER.indexOf(a);
+    const ib = constants.CAFETERIAS_DISPLAY_ORDER.indexOf(b);
+
+    return ia - ib;
+  }
+
+  /**
    * Create the html of a mealTime (lunch/dinner)
    * @param {*} data
    */
@@ -329,8 +338,11 @@
     const dishesElem = document.createElement('div');
     dishesElem.classList.add(CLASS_DISHES);
 
-    Object.keys(data).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)).forEach((key) => {
+    Object.keys(data).sort(cafeteriasSorter).forEach((key) => {
       const location = data[key];
+      if (!location.length) {
+        return;
+      }
       const tabElem = createTab(location, tabsElem);
       const contentElem = createTabContent(location, dishesElem);
       allTabs.push(tabElem);
@@ -414,8 +426,8 @@
       });
     }
 
-    const lunchElem = createTimeMenu(data[TIME_LUNCH], TIME_LUNCH);
-    const dinnerElem = createTimeMenu(data[TIME_DINNER], TIME_DINNER);
+    const lunchElem = createTimeMenu(data[constants.TIME_LUNCH], constants.TIME_LUNCH);
+    const dinnerElem = createTimeMenu(data[constants.TIME_DINNER], constants.TIME_DINNER);
 
     const showDinnerElem = createElementById('div', ID_SHOW_DINNER);
     showDinnerElem.title = 'Displaying lunch.\nClick to show dinner time.';
@@ -459,18 +471,24 @@
   }
 
   /**
-   *
+   * Create/update/remove the congestion indicator based on the new data
    */
   function setCongestion(newData) {
-    removeElementById(ID_CONGESTION);
     if (newData) {
       congestionData = newData;
     }
+
     const data = congestionData && congestionData[activeFloor];
     if (data !== undefined && data.rate) {
-      const elem = createElementById('div', ID_CONGESTION, `<span class="${CLASS_CONGESTION_RATE}">${data.rate}%</span>`);
-      elem.title = 'Ocuppation percentage';
-      containerElem.appendChild(elem);
+      let elem = document.getElementById(ID_CONGESTION);
+      if (!elem) {
+        elem = createElementById('div', ID_CONGESTION);
+        elem.title = 'Ocuppation percentage';
+        containerElem.appendChild(elem);
+      }
+      elem.innerHTML = `<span class="${CLASS_CONGESTION_RATE}">${data.rate}%</span>`;
+    } else {
+      removeElementById(ID_CONGESTION);
     }
   }
 

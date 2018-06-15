@@ -5,12 +5,16 @@
     'Main A',
     'Main B',
     'Main C',
+    'Bowl',
     'Bowl A',
     'Bowl B',
     'Grill',
     'Pasta',
     'Ramen',
     'Udon & Soba',
+    'Noodles A',
+    'Bowl & Donburi & Curry',
+    'Udon & Soba & Ramen & Pasta',
     'Halal',
   ].map(id => id.toLowerCase());
 
@@ -98,6 +102,18 @@
   }
 
   /**
+   * @returns {string} Current date as M/D/YYYY
+   */
+  function getAmericanDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${month}/${day}/${year}`;
+  }
+
+  /**
    * @returns {String} Current date as YYYYMMDD
    */
   function getNumericDate() {
@@ -129,7 +145,11 @@
         }
       }
 
-      request(url, options).then(resolveJson, reject);
+      request(url, {
+        headers: {
+          Accept: 'application/json;odata=verbose',
+        }
+      }).then(resolveJson, reject);
     });
   }
 
@@ -163,6 +183,12 @@
 
       if (options.post) {
         xhr.setRequestHeader('Content-type', 'application/json');
+      }
+
+      if (options.headers) {
+        Object.keys(options.headers).forEach((key) => {
+          xhr.setRequestHeader(key, options.headers[key]);
+        });
       }
 
       try {
@@ -278,6 +304,51 @@
     return currentSorterDirection;
   }
 
+  /**
+   * @param {*} obj object to check
+   * @returns {boolean} `true` if `obj` is a plain object, `false` otherwise
+   */
+  function isPlainObject(obj) {
+    return typeof obj === 'object' && !Array.isArray(obj);
+  }
+
+  /**
+   *
+   * @param {*} args
+   */
+  function extend(...args) {
+    let target = args[0];
+
+    if (!isPlainObject(target)) {
+      target = {};
+    }
+
+    for (let i = 1; i < args.length; i++) {
+      const source = args[i];
+
+      // ignore null/undefined source objects
+      if (source != undefined) { // tslint:disable-line:triple-equals
+        // extend the target
+        // tslint:disable-next-line:forin
+        for (const key in source) {
+          const value = source[key];
+
+          // prevent infinite loops
+          if (value !== target) {
+            if (isPlainObject(value)) {
+              target[key] = extend(target[key], value);
+            // ignore undefined values (will copy null ones)
+            } else if (value !== undefined) {
+              target[key] = value;
+            }
+          }
+        }
+      }
+    }
+
+    return target;
+  }
+
   /*
    * Export public members
    */
@@ -285,6 +356,7 @@
     noop,
     isString,
     padLeft,
+    getAmericanDate,
     getNumericDate,
     getJson,
     request,
@@ -295,5 +367,6 @@
     switchSorterDirection,
     getSorterType,
     getSorterDirection,
+    extend,
   };
 })(window);
