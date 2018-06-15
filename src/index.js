@@ -1,9 +1,6 @@
-/* global util, html, congestion */
+/* global util, html, congestion, constants */
 ((window) => {
   'use strict';
-
-  const STORAGE_NAMESPACE = `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`;
-  const CONGESTION_UPDATE_INTERVAL = 10 * 1000;
 
   /**
    *
@@ -32,8 +29,8 @@
 
     menus.get()
       .then((menus) => {
-        console.log('menus', menus);
         html.hideLoading();
+        html.createTitle();
         html.showMenus(menus, isDinerTime());
       })
       // .catch(menuLoadingError)
@@ -42,7 +39,7 @@
           html.setCongestion(data);
           const intervalHandler = setInterval(() => {
             congestion.get().then(html.setCongestion, () => clearInterval(intervalHandler));
-          }, CONGESTION_UPDATE_INTERVAL);
+          }, constants.CONGESTION_UPDATE_INTERVAL);
         }, util.noop);
       });
   }
@@ -51,7 +48,8 @@
    *
    */
   function initialize() {
-    const storage = new Storage(STORAGE_NAMESPACE);
+    document.title = `${constants.APP_TITLE} ${constants.APP_VERSION}`;
+    const storage = new Storage(constants.STORAGE_NAMESPACE);
     window.storage = storage;
 
     if (storage.get('uuid')) {

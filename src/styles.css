@@ -48,13 +48,40 @@ body {
   width: 500px;
 }
 
+#top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62px;
+  background: #ffffff;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16);
+  z-index: 50;
+  text-align: center;
+}
+
+#app-title {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  font-size: larger;
+  z-index: 300;
+  font-weight: bold;
+  color: #bf0000;
+}
+#app-title span {
+  color: #808080;
+  opacity: 0.4;
+  font-size: small;
+}
+
 #show-dinner,
 #show-lunch {
   width: 68px;
   height: 32px;
   position: fixed;
   top: 3px;
-  right: 48px;
+  right: 10px;
   cursor: pointer;
   display: none;
   z-index: 200;
@@ -82,7 +109,8 @@ body {
   position: fixed;
   height: 24px;
   z-index: 100;
-  padding: 2px 10px 13px 0px;
+  top: 30px;
+  padding: 0px 10px 13px 0px;
 }
 
 .tabs .tab {
@@ -105,7 +133,8 @@ body {
 
 .dishes {
   position: relative;
-  top: 38px;
+  top: 58px;
+  padding-top: 3px;
   border-top: 0;
   background: #fff;
 }
@@ -145,6 +174,12 @@ body {
   background-position: 50%;
 }
 
+.dishes .dish .preview a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .dishes .dish .details {
   margin-left: 250px;
 }
@@ -167,16 +202,19 @@ body {
   background: #efefef;
 }
 
-.dishes .dish.maina .booth .icon { background: url(img/main-a.jpg); }
-.dishes .dish.mainb .booth .icon { background: url(img/main-b.jpg); }
-.dishes .dish.mainc .booth .icon { background: url(img/main-c.jpg); }
-.dishes .dish.bowla .booth .icon { background: url(img/bowl-a.jpg); }
-.dishes .dish.bowlb .booth .icon { background: url(img/bowl-b.jpg); }
-.dishes .dish.grill .booth .icon { background: url(img/grill.jpg); }
-.dishes .dish.halal .booth .icon { background: url(img/halal.jpg); }
-.dishes .dish.pasta .booth .icon { background: url(img/pasta.jpg); }
-.dishes .dish.ramen .booth .icon { background: url(img/ramen.jpg); }
-.dishes .dish.udonsoba .booth .icon { background: url(img/udon-soba.jpg); }
+.dishes .dish.maina .booth .icon { background: url(img/booth-main-a.jpg); }
+.dishes .dish.mainb .booth .icon { background: url(img/booth-main-b.jpg); }
+.dishes .dish.mainc .booth .icon { background: url(img/booth-main-c.jpg); }
+.dishes .dish.bowla .booth .icon { background: url(img/booth-bowl-a.jpg); }
+.dishes .dish.bowlb .booth .icon { background: url(img/booth-bowl-b.jpg); }
+.dishes .dish.grill .booth .icon { background: url(img/booth-grill.jpg); }
+.dishes .dish.halal .booth .icon { background: url(img/booth-halal.jpg); }
+.dishes .dish.pasta .booth .icon { background: url(img/booth-pasta.jpg); }
+.dishes .dish.ramen .booth .icon { background: url(img/booth-ramen.jpg); }
+.dishes .dish.bowl .booth .icon { background: url(img/booth-bowl.jpg); }
+.dishes .dish.noodlesa .booth .icon { background: url(img/booth-noodles-a.jpg); }
+.dishes .dish.udonsobaramenpasta .booth .icon { background: url(img/booth-udon-soba.jpg); }
+.dishes .dish.udonsoba .booth .icon { background: url(img/booth-udon-soba.jpg); }
 
 .dishes .dish .price {
   display: none;
@@ -365,9 +403,9 @@ body {
 }
 
 #congestion {
-  position: fixed;
-  top: 10px;
-  right: 140px;
+  position: absolute;
+  bottom: 5px;
+  right: 100px;
   width: auto;
   z-index: 300;
   overflow: hidden;
@@ -384,30 +422,15 @@ body {
 	color: #bf2327;
 }
 
-#sort-controls-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 38px;
-  background: #ffffff;
-  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16);
-  z-index: 50;
-  text-align: center;
-}
-
-#sort-controls {
-  position: relative;
-  top: 6px;
-}
-
-#sort-type {
+#sort-button {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
   font-size: 0.75em;
   font-weight: bold;
   background: #d8d8d8;
   display: inline-block;
   cursor: pointer;
-  margin-right: 5px;
   padding: 3px 23px 3px 9px;
   border-radius: 9px;
   color: #fff;
@@ -415,16 +438,16 @@ body {
 }
 
 #sort-direction {
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 14px;
   height: 14px;
   background: #a7a7a7;
   display: inline-block;
   cursor: pointer;
-  position: relative;
-  right: 23px;
   border-radius: 10px;
   border: 2px solid #fff;
-  top: 5px;
 }
 #sort-direction .arrow {
   width: 0;

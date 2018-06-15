@@ -5,13 +5,14 @@
   const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
   const URL_UMAI_DELETE = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/deleteumai`;
 
-  const ID_SORT_CONTROLS_CONTAINER = 'sort-controls-container';
-  const ID_SORT_CONTROLS = 'sort-controls';
+  const ID_TOP_BAR = 'top-bar';
+  const ID_APP_TITLE = 'app-title';
+  const ID_SORT_BUTTON = 'sort-button';
+  const ID_SORT_DIR = 'sort-direction';
   const ID_SORT_TYPE = 'sort-type';
   const CLASS_SORTER = 'sorter-{{ID}}';
   const CLASS_SORTER_ASC = 'asc';
   const CLASS_SORTER_DESC = 'desc';
-  const ID_SORT_DIR = 'sort-direction';
   const ID_CONTAINER = 'container';
   const ID_LOADING = 'loading';
   const ID_ERROR = 'error';
@@ -53,6 +54,7 @@
   const CLASS_UMAI_COUNT = 'umai-count';
 
   const containerElem = document.getElementById(ID_CONTAINER);
+  const topBarElem = document.getElementById(ID_TOP_BAR);
   const umaiInProgress = [];
   let uuid;
 
@@ -106,6 +108,7 @@
                 + '<div class="rect5"></div>'
               + '</div>';
     const elem = createElementById('div', ID_LOADING, html);
+    topBarElem.style.display = 'none';
     containerElem.appendChild(elem);
   }
 
@@ -114,6 +117,7 @@
    */
   function hideLoading() {
     removeElementById(ID_LOADING);
+    topBarElem.style.display = '';
   }
 
   /**
@@ -238,7 +242,9 @@
 
     const elem = document.createElement('div');
     const priceHtml = `<div class="${CLASS_DISH_PRICE}">${util.formatNumber(dish.price)}円</div>`;
-    const html = `<div class="${CLASS_DISH_PREVIEW}" style="background-image: url(${dish.imageURL})"></div>`
+    const html = `<div class="${CLASS_DISH_PREVIEW}" style="background-image: url(${dish.imageURL})">
+            <a target="_blank" href="${dish.imageURL}"></a>
+            </div>`
               + '<div class="details">'
                 + `<div class="${CLASS_DISH_BOOTH}">`
                   + `<div class="${CLASS_ICON}"></div>`
@@ -369,28 +375,26 @@
    * @returns {DOM} buttons to sort the menus
    */
   function createSorterElement() {
-    const html = createElementById('div', ID_SORT_CONTROLS_CONTAINER);
-    const controls = createElementById('div', ID_SORT_CONTROLS);
-    const sorterButton = createElementById('div', ID_SORT_TYPE);
+    const sorterButton = createElementById('div', ID_SORT_BUTTON);
+    const sorterType = createElementById('span', ID_SORT_TYPE);
     const sorterDirection = createElementById('div', ID_SORT_DIR, '<div class="arrow"></div>');
 
     sorterButton.addEventListener('click', (ev) => {
       util.switchSorterType(ev.shiftKey ? -1 : 1);
-      updateSorterElement(sorterButton, sorterDirection);
+      updateSorterElement(sorterType, sorterDirection);
       resortMenus();
     });
     sorterDirection.addEventListener('click', (ev) => {
       util.switchSorterDirection();
-      updateSorterElement(sorterButton, sorterDirection);
+      updateSorterElement(sorterType, sorterDirection);
       resortMenus();
     });
 
-    updateSorterElement(sorterButton, sorterDirection);
-    controls.appendChild(sorterButton);
-    controls.appendChild(sorterDirection);
-    html.appendChild(controls);
+    updateSorterElement(sorterType, sorterDirection);
+    sorterButton.appendChild(sorterType);
+    sorterButton.appendChild(sorterDirection);
 
-    return html;
+    return sorterButton;
   }
 
   /**
@@ -431,11 +435,11 @@
 
     const showDinnerElem = createElementById('div', ID_SHOW_DINNER);
     showDinnerElem.title = 'Displaying lunch.\nClick to show dinner time.';
-    containerElem.appendChild(showDinnerElem);
+    topBarElem.appendChild(showDinnerElem);
 
     const showLunchElem = createElementById('div', ID_SHOW_LUNCH);
     showLunchElem.title = 'Displaying dinner.\nClick to show lunch time.';
-    containerElem.appendChild(showLunchElem);
+    topBarElem.appendChild(showLunchElem);
 
     const lunch = [lunchElem, showDinnerElem];
     const dinner = [dinnerElem, showLunchElem];
@@ -449,7 +453,7 @@
     showDinnerElem.addEventListener('click', () => swap(dinner, lunch));
     showLunchElem.addEventListener('click', () => swap(lunch, dinner));
 
-    containerElem.appendChild(createSorterElement());
+    topBarElem.appendChild(createSorterElement());
 
     uuid = window.storage.get('uuid');
   }
@@ -484,12 +488,21 @@
       if (!elem) {
         elem = createElementById('div', ID_CONGESTION);
         elem.title = 'Ocuppation percentage';
-        containerElem.appendChild(elem);
+        topBarElem.appendChild(elem);
       }
       elem.innerHTML = `<span class="${CLASS_CONGESTION_RATE}">${data.rate}%</span>`;
     } else {
       removeElementById(ID_CONGESTION);
     }
+  }
+
+  /**
+   * Create the title with the name and the version of the app
+   */
+  function createTitle() {
+    const html = `${constants.APP_TITLE} <span>${constants.APP_VERSION}</span>`;
+    const elem = createElementById('div', ID_APP_TITLE, html);
+    topBarElem.appendChild(elem);
   }
 
   /*
@@ -502,5 +515,6 @@
     hideError,
     showMenus,
     setCongestion,
+    createTitle,
   };
 })(window, document);

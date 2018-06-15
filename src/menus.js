@@ -1,4 +1,4 @@
-/* global util */
+/* global util, storage */
 ((window) => {
   'use strict';
 
@@ -14,25 +14,25 @@
       apiName: '9F Cafeteria',
       displayName: '9F',
       id: '9f',
-      imageUrl: 'https://officerakuten.sharepoint.com/sites/Committees/cafeteria/MenuImage_9F/_w/{ID}_JPG.jpg',
+      imageUrl: `${SERVER_URL}/sites/Committees/cafeteria/MenuImage_9F/_w/{ID}_JPG.jpg`,
     },
     {
       apiName: '22F Cafeteria',
       displayName: '22F',
       id: '22f',
-      imageUrl: 'https://officerakuten.sharepoint.com/sites/Committees/cafeteria/MenuImage_22F/_w/{ID}_JPG.jpg',
+      imageUrl: `${SERVER_URL}/sites/Committees/cafeteria/MenuImage_22F/_w/{ID}_JPG.jpg`,
     },
     {
       apiName: 'Rise Cafeteria',
       displayName: 'Rise',
       id: 'rise',
-      imageUrl: 'https://officerakuten.sharepoint.com/sites/Committees/cafeteria/MenuImage_Rise/_w/{ID}_JPG.jpg',
+      imageUrl: `${SERVER_URL}/sites/Committees/cafeteria/MenuImage_Rise/_w/{ID}_JPG.jpg`,
     },
     {
       apiName: 'Osaka Branch',
       displayName: 'Osaka',
       id: 'osaka',
-      imageUrl: 'https://officerakuten.sharepoint.com/sites/Committees/cafeteria/MenuImage_Osaka/_w/{ID}_JPG.jpg',
+      imageUrl: `${SERVER_URL}/sites/Committees/cafeteria/MenuImage_Osaka/_w/{ID}_JPG.jpg`,
     },
   ];
 
@@ -273,6 +273,9 @@
       // Promise.all([getMenusFromApi(), getMenusFromRap()])
       //   .then(([apiData, rapData]) => util.extend(apiData, rapData))
       getMenusFromRap()
+        // .then((menus) => {
+        //   storage.
+        // })
         .then(resolve)
         .catch(reject);
     });

@@ -99,7 +99,7 @@
    * @returns {Promise} resolved to an object as { floor: { rate, time } }
    */
   function getCongestion() {
-    const currentHour = 12; // new Date().getHours();
+    const currentHour = new Date().getHours();
     if (currentHour < 11 || (currentHour > 14 && currentHour < 19) || currentHour > 21) {
       return Promise.reject();
     }
