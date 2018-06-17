@@ -33,7 +33,7 @@
         html.createTitle();
         html.showMenus(menus, isDinerTime());
       })
-      // .catch(menuLoadingError)
+      .catch(menuLoadingError)
       .then(() => {
         congestion.get().then((data) => {
           html.setCongestion(data);

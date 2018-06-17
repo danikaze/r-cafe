@@ -9,6 +9,7 @@ design
 *.pem
 .vscode
 _samples
+*.zip
 
 # =========================
 # Operating System Files
