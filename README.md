@@ -8,6 +8,8 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.1
+- Display an error meessage if the data can't be retrieved
 ### 0.7.0
 - Read the menu information from RAP instead of the API
 - Fixed the top bar to accomodate more cafeterias (_Rise Building 13F_, _Osaka Branch_)
