@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.2
+- Fix title version
+
 ### 0.7.1
 - Display an error meessage if the data can't be retrieved
 - Fix duplicated dishes coming from the server
