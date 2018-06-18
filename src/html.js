@@ -127,6 +127,7 @@
     const html = '<p class="top">Error retrieving the data</p>'
               + '<p class="bottom">Click to retry</p>';
     const elem = createElementById('div', ID_ERROR, html);
+    topBarElem.style.display = 'none';
     containerElem.appendChild(elem);
 
     return elem;

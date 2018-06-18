@@ -77,6 +77,27 @@
   }
 
   /**
+   * Returned information is shit and menuID is different even for duplicated elements, so we filter manually
+   *
+   * @param {object[]} dishes List of dishes of a location/time
+   */
+  function removeDuplicated(dishes) {
+    const uniques = [];
+    const keys = [];
+
+    dishes.forEach((item) => {
+      const key = item.menuType;
+      if (keys.indexOf(key) !== -1) {
+        return;
+      }
+      keys.push(key);
+      uniques.push(item);
+    });
+
+    return uniques;
+  }
+
+  /**
    * Get the menu type of a dish from its menu id or menu type title
    */
   function getMenuType(data) {
@@ -111,6 +132,7 @@
       '07_Udon & Soba': 'Udon & Soba', // 9F / 22F
       '08_Ramen': 'Ramen', // 9F / 22F
       '09_Pasta': 'Pasta', // 9F / 22F
+      '11_Halal': 'Halal', // 9F
     }
 
     return map[data.MenuTypeId || data.MenuTypeTitle] || 'unknown-type';
@@ -287,6 +309,15 @@
       // Promise.all([getMenusFromApi(), getMenusFromRap()])
       //   .then(([apiData, rapData]) => util.extend(apiData, rapData))
       getMenusFromRap()
+        .then((menus) => {
+          Object.keys(menus).forEach((time) => {
+            Object.keys(menus[time]).forEach((location) => {
+              menus[time][location] = removeDuplicated(menus[time][location]);
+            });
+          });
+
+          return menus;
+        })
         .then(resolve)
         .catch(reject);
     });
