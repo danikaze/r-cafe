@@ -124,8 +124,8 @@
    * Create and return the error element
    */
   function showError() {
-    const html = '<p class="top">Error retrieving the data</p>'
-              + '<p class="bottom">Click to retry</p>';
+    const html = '<p class="top">Error retrieving the data. You need to be logged in RAP in order to show the <em>confidential</em> menu...</p>'
+              + '<p class="bottom">Click here to retry</p>';
     const elem = createElementById('div', ID_ERROR, html);
     topBarElem.style.display = 'none';
     containerElem.appendChild(elem);
@@ -215,20 +215,19 @@
       return `<div class="${componentClass}">`
                + `<div class="${CLASS_ICON}"></div>`
                + `<span class="${CLASS_COMPONENT_NAME}">${componentName}</span> `
-               + `${value} gr.`
+               + `${value ? `${value} gr.` : '?'}`
              + '</div>';
     }
 
     function ingredientsHtml() {
-      const list = ['alcohol', 'beef', 'chicken', 'fish', 'healthy', 'mutton', 'pork'];
       let html = `<div class="${CLASS_INGREDIENTS}">`;
-      list.forEach((ingredient) => {
-        if (dish.ingredients[ingredient]) {
-          const className = CLASS_INGREDIENT_NAME.replace('{{NAME}}', ingredient.toLowerCase());
-          const ingredientName = ingredient.substring(0, 1).toUpperCase() + ingredient.substring(1).toLowerCase();
+      if (dish && dish.ingredients) {
+        dish.ingredients.forEach((ingredient) => {
+          const className = CLASS_INGREDIENT_NAME.replace('{{NAME}}', ingredient);
+          const ingredientName = ingredient.substring(0, 1).toUpperCase() + ingredient.substring(1);
           html += `<div class="${CLASS_INGREDIENT} ${className}" title="${ingredientName}"></div>`;
-        }
-      });
+        });
+      }
       return `${html}</div>`;
     }
 
@@ -251,7 +250,7 @@
                   + `<div class="${CLASS_ICON}"></div>`
                   + `<span class="${CLASS_DISH_BOOTH_NAME}">${dish.menuType}</span>`
                 + '</div>'
-                + `<div class="${CLASS_DISH_NAME}">${dish.title}</div>`
+                + `<div class="${CLASS_DISH_NAME}">${dish.title ? dish.title : ''}</div>`
                 + `<div class="${CLASS_DISH_CALORIES}">${dish.calories} kcal.</div>`
                 + `<div class="${CLASS_DISH_COMPONENTS}">`
                   + componentHtml(CLASS_DISH_CARB, 'Carbs', dish.component.carb)
