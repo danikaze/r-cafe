@@ -8,6 +8,13 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.5
+- Added RAP link when not logged in
+- CSS fix in Windows
+
+### 0.7.4
+- Display prices again on paid dishes
+
 ### 0.7.3
 - Fix the display of ingredients of each dish
 - Improved error message

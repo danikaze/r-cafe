@@ -184,7 +184,7 @@
           protein: detailData.Protein,
           sodium: detailData.Sodium,
         },
-        price: undefined,
+        price: parseInt(detailData.Value),
         umaiCount: undefined,
       };
 

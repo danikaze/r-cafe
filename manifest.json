@@ -4,7 +4,7 @@
   "name": "Яakuten Cafeteria Menu",
   "short_name": "ЯakutenCafe",
   "description": "Shows a preview of the Яakuten Crimson House Cafeteria menus",
-  "version": "0.7.3",
+  "version": "0.7.5",
 
   "icons": {
     "16": "icon16.png",
