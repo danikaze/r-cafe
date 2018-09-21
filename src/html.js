@@ -125,7 +125,7 @@
    */
   function showError() {
     const html = '<p class="top">Error retrieving the data. You need to be logged in '
-              + '<a href="https://officerakuten.sharepoint.com/sites/GlobalPortal/SitePages/top.aspx">RAP</a> '
+              + '<a href="https://officerakuten.sharepoint.com/sites/GlobalPortal/SitePages/top.aspx" target="_blank" id="rap-link">RAP</a> '
               + 'in order to show the <em>confidential</em> menu...</p>'
               + '<p class="bottom">Click here to retry</p>';
     const elem = createElementById('div', ID_ERROR, html);

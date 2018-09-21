@@ -60,6 +60,18 @@ body {
   text-align: center;
 }
 
+#rap-link,
+#rap-link:hover,
+#rap-link:visited,
+#rap-link:active {
+  text-decoration: none;
+  color: #bf0000;
+}
+
+#rap-link:hover {
+  text-decoration: underline;
+}
+
 #app-title {
   position: fixed;
   top: 8px;

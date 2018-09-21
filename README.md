@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.6
+- Fixed RAP link when not logged in to open in a new window (and its CSS style)
+
 ### 0.7.5
 - Added RAP link when not logged in
 - CSS fix in Windows
