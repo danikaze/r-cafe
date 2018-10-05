@@ -363,7 +363,9 @@
       });
     });
 
-    activeFloor = allTabs[0].dataset.floor;
+    if (!activeFloor) {
+      activeFloor = allTabs[0].dataset.floor;
+    }
     allTabs[0].classList.add(CLASS_ACTIVE);
     allContents[0].classList.add(CLASS_ACTIVE);
 
