@@ -60,18 +60,6 @@ body {
   text-align: center;
 }
 
-#rap-link,
-#rap-link:hover,
-#rap-link:visited,
-#rap-link:active {
-  text-decoration: none;
-  color: #bf0000;
-}
-
-#rap-link:hover {
-  text-decoration: underline;
-}
-
 #app-title {
   position: fixed;
   top: 8px;
@@ -382,20 +370,34 @@ body {
 #error {
   height: 100px;
   background: url(img/derp.jpg) left no-repeat;
-  cursor: pointer;
   color: #730000;
-}
-#error:hover {
-  color: #bd0000;
-}
-
-#error .top {
   padding: 25px 20px 0 100px;
+  line-height: 1.2em;
 }
 
-#error .bottom {
-  padding: 1em 20px 20px 100px;
+#error p {
+  margin-bottom: 1em;
 }
+
+#error a {
+  color: #000000;
+  text-decoration: none;
+}
+
+#error a:hover {
+  color: #ff0000;
+  text-decoration: underline;
+}
+
+#error .version {
+  position: absolute;
+  top: 0;
+  right: 3px;
+  color: #cccccc;
+  font-size: 75%;
+  font-weight: bold;
+}
+
 
 #github {
   position: fixed;

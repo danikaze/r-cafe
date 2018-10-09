@@ -4,6 +4,7 @@
 
   const URL_UMAI_POST = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/postumai`;
   const URL_UMAI_DELETE = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/umai/deleteumai`;
+  const URL_RAP = `https://office${'r'}a${'k'}u${'t'}e${'n'}.sharepoint.com/sites/GlobalPortal/SitePages/top.aspx`;
 
   const ID_TOP_BAR = 'top-bar';
   const ID_APP_TITLE = 'app-title';
@@ -124,10 +125,12 @@
    * Create and return the error element
    */
   function showError() {
-    const html = '<p class="top">Error retrieving the data. You need to be logged in '
-              + '<a href="https://officerakuten.sharepoint.com/sites/GlobalPortal/SitePages/top.aspx" target="_blank" id="rap-link">RAP</a> '
-              + 'in order to show the <em>confidential</em> menu...</p>'
-              + '<p class="bottom">Click here to retry</p>';
+    const html = '<p>Error retrieving the data.</p>'
+               + '<p>You need to be logged in '
+                 + `<a href="${URL_RAP}" target="_blank" id="rap-link">RAP</a> `
+                 + 'in order to show the <em>confidential</em> menu...'
+               + '</p>'
+               + `<div class="version">${constants.APP_VERSION}</div>`;
     const elem = createElementById('div', ID_ERROR, html);
     topBarElem.style.display = 'none';
     containerElem.appendChild(elem);
