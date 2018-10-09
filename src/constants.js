@@ -5,8 +5,8 @@
    * Export public constants
    */
   window.constants = {
-    APP_TITLE: 'Яakuten Cafeteria Menu',
-    APP_VERSION: '0.7.6',
+    APP_TITLE: `Яa${'k'}u${'t'}e${'n'} Cafeteria Menu`,
+    APP_VERSION: '0.7.7',
     ENABLE_MENU_CACHE: false,
     STORAGE_NAMESPACE: `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`,
     CONGESTION_UPDATE_INTERVAL: 10 * 1000, // 10s

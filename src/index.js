@@ -8,8 +8,7 @@
    */
   function menuLoadingError(xhr) {
     html.hideLoading();
-    const elem = html.showError();
-    elem.addEventListener('click', start);
+    html.showError();
   }
 
   /**
