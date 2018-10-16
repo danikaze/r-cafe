@@ -6,7 +6,7 @@
    */
   window.constants = {
     APP_TITLE: `Яa${'k'}u${'t'}e${'n'} Cafeteria Menu`,
-    APP_VERSION: '0.7.7',
+    APP_VERSION: '0.7.8',
     ENABLE_MENU_CACHE: false,
     STORAGE_NAMESPACE: `${'r'}a${'k'}u${'t'}e${'n'}Cafeteria`,
     CONGESTION_UPDATE_INTERVAL: 10 * 1000, // 10s

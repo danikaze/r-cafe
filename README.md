@@ -8,8 +8,10 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
-###
+### 0.7.8
 - Fixed missing title for some menus
+- Improved duplicated dishes detection (Now one booth can have more than one dish)
+- Styles: Better visibility for dish components and calories
 
 ### 0.7.7
 - Fixed a bug where the congestion for the 22F was shown when opening the popup
