@@ -174,7 +174,7 @@
         timezone: menuData.Timezone === 'Lunch' ? constants.TIME_LUNCH : constants.TIME_DINNER,
         menuId: menuData.MenuId,
         menuType: getMenuType(menuData),
-        title: detailData.Title,
+        title: detailData.MenuTitle || detailData.Title,
         imageURL: cafeteria.imageUrl.replace('{ID}', detailData.MenuID),
         ingredients: getIngredients(menuData),
         calories: detailData.Calory,

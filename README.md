@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+###
+- Fixed missing title for some menus
+
 ### 0.7.7
 - Fixed a bug where the congestion for the 22F was shown when opening the popup
   for the first time (even if the active floor is the 9F)
