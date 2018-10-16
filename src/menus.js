@@ -86,7 +86,7 @@
     const keys = [];
 
     dishes.forEach((item) => {
-      const key = item.menuType;
+      const key = item.menuId;
       if (keys.indexOf(key) !== -1) {
         return;
       }
@@ -100,7 +100,7 @@
   /**
    * Get the menu type of a dish from its menu id or menu type title
    */
-  function getMenuType(data) {
+  function getMenuType(menuData, detailData) {
     const map = {
       16: 'Main A', // 9F / 22F
       17: 'Main B', // 9F / 22F
@@ -135,7 +135,11 @@
       '11_Halal': 'Halal', // 9F
     }
 
-    return map[data.MenuTypeId || data.MenuTypeTitle] || 'unknown-type';
+    const key = (detailData.MenuType_Image && detailData.MenuType_Image.Description)
+              || menuData.MenuTypeId
+              || menuData.MenuTypeTitle;
+
+    return map[key] || map[`0${key}`] || map[`1${key}`] || 'unknown-type';
   }
 
   /**
@@ -173,7 +177,7 @@
         cafeteriaName: cafeteria.displayName,
         timezone: menuData.Timezone === 'Lunch' ? constants.TIME_LUNCH : constants.TIME_DINNER,
         menuId: menuData.MenuId,
-        menuType: getMenuType(menuData),
+        menuType: getMenuType(menuData, detailData),
         title: detailData.MenuTitle || detailData.Title,
         imageURL: cafeteria.imageUrl.replace('{ID}', detailData.MenuID),
         ingredients: getIngredients(menuData),
@@ -188,15 +192,7 @@
         umaiCount: undefined,
       };
 
-      // if (detailData.File && detailData.File.__deferred && detailData.File.__deferred.uri) {
-      //   util.getJson(detailData.File.__deferred.uri)
-      //     .then((fileData) => {
-      //       dish.imageURL = `${SERVER_URL}${fileData.d.ServerRelativeUrl}`;
-      //       resolve(dish);
-      //     });
-      // } else {
-        resolve(dish);
-      // }
+      resolve(dish);
     })
   }
 
