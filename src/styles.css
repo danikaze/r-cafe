@@ -239,14 +239,14 @@ body {
   margin-top: 0.5em;
   font-size: small;
   font-weight: bold;
-  color: #b7b7b7;
+  color: #a9a9a9;
 }
 
 .dishes .dish .components {
   font-size: small;
   margin-left: 0.5em;
   margin-top: 0.5em;
-  color: #b7b7b7;
+  color: #a9a9a9;
 }
 
 .dishes .dish .components .icon {
@@ -258,10 +258,10 @@ body {
   position: relative;
   top: -1px;
 }
-.dishes .dish .carb .icon { background: #bbbbff; }
-.dishes .dish .fat .icon { background: #ffbbbb; }
-.dishes .dish .protein .icon { background: #ffeabb; }
-.dishes .dish .sodium .icon { background: #bbffbb; }
+.dishes .dish .carb .icon { background: #9999ff; }
+.dishes .dish .fat .icon { background: #ff9999; }
+.dishes .dish .protein .icon { background: #fde2a5; }
+.dishes .dish .sodium .icon { background: #a3e6a3; }
 
 .dish .ingredients {
   margin-top: 0.5em;
@@ -274,7 +274,7 @@ body {
   margin-right: 2px;
   background-size: cover;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .dish .ingredients .ingredient-alcohol { background-image: url(img/ingredient-alcohol.jpg); }
@@ -396,25 +396,6 @@ body {
   color: #cccccc;
   font-size: 75%;
   font-weight: bold;
-}
-
-
-#github {
-  position: fixed;
-  top: 5px;
-  right: 6px;
-  cursor: pointer;
-  display: block;
-  z-index: 200;
-  opacity: 0.5;
-}
-#github:hover {
-  opacity: 1.0;
-}
-
-#github img {
-  width: 28px;
-  height: 28px;
 }
 
 #congestion {
