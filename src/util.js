@@ -13,8 +13,9 @@
     'Ramen',
     'Udon & Soba',
     'Noodles A',
+    'Noodles B',
     'Bowl & Donburi & Curry',
-    'Udon & Soba & Ramen & Pasta',
+    'Noodles & Pasta',
     'Halal',
   ].map(id => id.toLowerCase());
 

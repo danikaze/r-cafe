@@ -213,8 +213,10 @@ body {
 .dishes .dish.pasta .booth .icon { background: url(img/booth-pasta.jpg); }
 .dishes .dish.ramen .booth .icon { background: url(img/booth-ramen.jpg); }
 .dishes .dish.bowl .booth .icon { background: url(img/booth-bowl.jpg); }
+.dishes .dish.bowldonburicurry .booth .icon { background: url(img/booth-bowl.jpg); }
 .dishes .dish.noodlesa .booth .icon { background: url(img/booth-noodles-a.jpg); }
-.dishes .dish.udonsobaramenpasta .booth .icon { background: url(img/booth-udon-soba.jpg); }
+.dishes .dish.noodlesb .booth .icon { background: url(img/booth-noodles-b.jpg); }
+.dishes .dish.noodlespasta .booth .icon { background: url(img/booth-udon-soba.jpg); }
 .dishes .dish.udonsoba .booth .icon { background: url(img/booth-udon-soba.jpg); }
 
 .dishes .dish .price {

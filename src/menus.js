@@ -2,8 +2,6 @@
 ((window) => {
   'use strict';
 
-  const types = [];
-
   const MENU_CACHE_TTL = 12 * 3600; // 12h
   const TIMEZONES = ['Lunch', 'Dinner'];
   const URL_API = `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate={DATE}`;
@@ -99,6 +97,7 @@
 
   /**
    * Get the menu type of a dish from its menu id or menu type title
+   * HERE BE DRAGONS
    */
   function getMenuType(menuData, detailData) {
     const map = {
@@ -113,7 +112,7 @@
       24: 'Grill', // 9F / 22F
       25: 'Bowl & Donburi & Curry', // osaka
       26: 'Main A', // osaka
-      27: 'Udon & Soba & Ramen & Pasta', // osaka
+      27: 'Noodles & Pasta', // osaka
       28: 'Main B', // osaka
       33: 'Main B', // rise
       35: 'Bowl', // rise
@@ -125,9 +124,10 @@
       '03_Main C': 'Main C', // 9F / 22F
       '04_Bowl': 'Bowl', // rise
       '04_Bowl A': 'Bowl A', // 9F / 22 F
-      '04_Udon & Soba & Ramen & Pasta': 'Udon & Soba & Ramen & Pasta', // osaka
+      '04_Udon & Soba & Ramen & Pasta': 'Noodles & Pasta', // osaka
       '05_Bowl B': 'Bowl B', // 22F
       '05_Noodles A': 'Noodles A', // rise
+      '06_Noodles B': 'Noodles B', // rise
       '06_Grill': 'Grill', // 9F / 22F
       '07_Udon & Soba': 'Udon & Soba', // 9F / 22F
       '08_Ramen': 'Ramen', // 9F / 22F
@@ -139,7 +139,7 @@
               || menuData.MenuTypeId
               || menuData.MenuTypeTitle;
 
-    return map[key] || map[`0${key}`] || map[`1${key}`] || 'unknown-type';
+    return map[key] || map[`0${key}`] || map[`1${key}`] || 'Magical booth';
   }
 
   /**
