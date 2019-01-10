@@ -8,6 +8,9 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.7.9
+- Added title and icon for new booth (_Noodles B_), removing the `unknown-type` text
+
 ### 0.7.8
 - Fixed missing title for some menus
 - Improved duplicated dishes detection (Now one booth can have more than one dish)
@@ -16,7 +19,7 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 ### 0.7.7
 - Fixed a bug where the congestion for the 22F was shown when opening the popup
   for the first time (even if the active floor is the 9F)
-- Improved error message.
+- Improved error message
 
 ### 0.7.6
 - Fixed RAP link when not logged in to open in a new window (and its CSS style)
