@@ -16,7 +16,7 @@
 
   "browser_action": {
     "default_icon": "icons/icon128.png",
-    "default_popup": "src/popup.html",
+    "default_popup": "index.html",
     "default_title": "Show Яakuten Cafeteria menu"
   },
   "permissions": ["http://*/*", "https://*/*"]

@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "react": "^16.8.4",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "vanilla-type-check": "^2.0.3"
   }
 }
