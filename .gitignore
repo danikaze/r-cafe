@@ -4,8 +4,8 @@
 *.SUBLIME-PROJECT
 *.SUBLIME-WORKSPACE
 node_modules
-bin
-design
+app
+old
 *.pem
 .vscode
 _samples

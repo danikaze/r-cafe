@@ -1,0 +1,31 @@
+const packageJson = require('./package.json');
+
+module.exports = {
+  APP_VERSION: packageJson.version,
+  APP_TITLE: `Яa${'k'}u${'t'}e${'n'} Cafeteria Menu`,
+  MENU_API_URL: `http://${'r'}a${'k'}u${'t'}e${'n'}-towerman.azurewebsites.net/towerman-restapi/rest/cafeteria/menulist?menuDate={DATE}`,
+  CONGESTION_URL_JSON_9F: `http://p${2}${3}${3}${9}${5}/cafe_crowd/data/9F/crowd_rate.json`,
+  CONGESTION_URL_JSON_22F: `http://p${2}${3}${3}${9}${5}/cafe_crowd/data/22F/crowd_rate.json`,
+  CONGESTION_INTERVAL: 10000,
+  LUNCH_START: 11,
+  LUNCH_END: 14,
+  DINNER_START: 19,
+  DINNER_END: 21,
+  BOOT_ORDER: [
+    'Main A',
+    'Main B',
+    'Main C',
+    'Bowl',
+    'Bowl A',
+    'Bowl B',
+    'Grill',
+    'Pasta',
+    'Ramen',
+    'Udon & Soba',
+    'Noodles A',
+    'Noodles B',
+    'Bowl & Donburi & Curry',
+    'Noodles & Pasta',
+    'Halal',
+  ],
+};
