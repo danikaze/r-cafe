@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "npm run lint",
-    "build": "webpack --config webpack.config.js --env=production",
+    "build": "scripts/build.sh",
     "dev": "webpack --config webpack.config.js --env=development",
     "lint": "tslint -p tsconfig.json -c tslint.yaml",
     "clean": "rimraf app"
