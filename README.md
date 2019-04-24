@@ -8,6 +8,11 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.8.0
+- Full reimplementation in React+TS
+- Use both (API+RAP) data sources to display the available implementation
+- Show only a connection problem icon when there's no RAP access, but there's API data (instead of showing a full error page)
+
 ### 0.7.9
 - Added title and icon for new booth (_Noodles B_), removing the `unknown-type` text
 
