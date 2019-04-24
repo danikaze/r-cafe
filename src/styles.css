@@ -73,6 +73,7 @@ body {
   color: #808080;
   opacity: 0.4;
   font-size: small;
+  margin-left: 8px;
 }
 
 #show-dinner,
@@ -83,19 +84,13 @@ body {
   top: 3px;
   right: 10px;
   cursor: pointer;
-  display: none;
   z-index: 200;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
-#show-dinner.active,
-#show-lunch.active {
-  display: block;
-}
-
-#show-dinner { background: url(img/dayON.png); }
-#show-lunch { background: url(img/nightON.png); }
+#show-dinner { background-image: url(img/dayON.png); }
+#show-lunch { background-image: url(img/nightON.png); }
 
 .menu {
   width: 500px;
@@ -125,6 +120,7 @@ body {
   opacity: 0.4;
   color: #808080;
   background: url(img/tab-icon.png) no-repeat left center;
+  cursor: pointer;
 }
 
 .tabs .tab.active {
@@ -371,10 +367,20 @@ body {
 
 #error {
   height: 100px;
-  background: url(img/derp.jpg) left no-repeat;
   color: #730000;
-  padding: 25px 20px 0 100px;
+  padding: 25px 20px 0 130px;
   line-height: 1.2em;
+  background: #f4f4f4;
+}
+
+#error .img {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  background: url(img/panda.jpg) left no-repeat;
+  background-size: cover;
+  width: 124px;
+  height: 100px;
 }
 
 #error p {
@@ -398,6 +404,18 @@ body {
   color: #cccccc;
   font-size: 75%;
   font-weight: bold;
+}
+
+#error-rap {
+  position: absolute;
+  bottom: 3px;
+  right: 175px;
+  display: block;
+  width: 28px;
+  height: 22px;
+  background: url(img/sad-cloud.png) no-repeat center;
+  background-size: contain;
+  cursor: pointer;
 }
 
 #congestion {
