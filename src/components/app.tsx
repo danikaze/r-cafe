@@ -1,3 +1,4 @@
+// tslint:disable:no-boolean-literal-compare
 import * as React from 'react';
 import { Cafeteria, DayMenu, State } from '../def';
 import { selectTime, toggleOrderType, toggleOrderDirection, selectCafeteria } from '../store/actions/ui';
@@ -13,10 +14,11 @@ import { Loading } from './loading';
 import { Error } from './error';
 import { DishDetails } from './dish-details';
 import { SortButton } from './sort-button';
+import { ErrorRap } from './error-rap';
 
 export function App({ useStateValue }) {
   const [state, dispatch] = useStateValue();
-  const { status, time, cafeteria, sortBy, sortOrder } = state as State;
+  const { status, time, cafeteria, sortBy, sortOrder, rapAccess, apiAccess } = state as State;
 
   React.useEffect(() => {
     dispatch(loadTodayMenu());
@@ -33,7 +35,7 @@ export function App({ useStateValue }) {
     return <Loading />;
   }
 
-  if (status === 'error') {
+  if (rapAccess === false && apiAccess === false) {
     return <Error />;
   }
 
@@ -68,6 +70,7 @@ export function App({ useStateValue }) {
     <>
       <div id='top-bar'>
         <AppTitle />
+        {rapAccess === false ? <ErrorRap /> : null}
         <Congestion rate={congestion} />
         <Time time={time} onClick={handleTimeSelect} />
         <SortButton

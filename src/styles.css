@@ -406,6 +406,18 @@ body {
   font-weight: bold;
 }
 
+#error-rap {
+  position: absolute;
+  bottom: 3px;
+  right: 175px;
+  display: block;
+  width: 28px;
+  height: 22px;
+  background: url(img/sad-cloud.png) no-repeat center;
+  background-size: contain;
+  cursor: pointer;
+}
+
 #congestion {
   position: absolute;
   bottom: 5px;

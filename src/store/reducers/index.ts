@@ -44,6 +44,18 @@ export function reducer(state: State, action: Action): State {
         sortOrder: state.sortOrder === 'asc' ? 'desc' : 'asc',
       };
 
+    case 'updateApiAccess':
+      return {
+        ...state,
+        apiAccess: action.status,
+      };
+
+    case 'updateRapAccess':
+      return {
+        ...state,
+        rapAccess: action.status,
+      };
+
     default:
       return state;
   }

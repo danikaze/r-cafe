@@ -39,4 +39,6 @@ export interface State {
   congestion: Congestion;
   sortBy: SorterType;
   sortOrder: SorterDirection;
+  apiAccess?: boolean;
+  rapAccess?: boolean;
 }
