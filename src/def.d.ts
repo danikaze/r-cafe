@@ -32,7 +32,9 @@ export interface Dish {
 }
 
 export interface State {
-  status: AjaxStatus;
+  status: { [date: string]: AjaxStatus };
+  day: Date;
+  selectingDay: boolean;
   cafeteria: Cafeteria;
   time: Time;
   menus: WeekMenu;

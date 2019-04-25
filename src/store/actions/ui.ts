@@ -18,6 +18,16 @@ export interface ToggleOrderDirection {
   type: 'toggleOrderDirection';
 }
 
+export interface ShowDaySelection {
+  type: 'showDaySelection';
+  display: boolean;
+}
+
+export interface SelectDay {
+  type: 'selectDay';
+  day: Date;
+}
+
 export function selectTime(time: Time): SelectTime {
   return {
     time,
@@ -41,5 +51,19 @@ export function toggleOrderType(): ToggleOrderType {
 export function toggleOrderDirection(): ToggleOrderDirection {
   return {
     type: 'toggleOrderDirection',
+  };
+}
+
+export function showDaySelection(display: boolean): ShowDaySelection {
+  return {
+    display,
+    type: 'showDaySelection',
+  };
+}
+
+export function selectDay(day: Date): SelectDay {
+  return {
+    day,
+    type: 'selectDay',
   };
 }

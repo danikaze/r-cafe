@@ -6,10 +6,13 @@ import { createState } from './store';
 import { reducer } from './store/reducers';
 import { State } from './def';
 
+const now = new Date();
 const initialState: State = {
-  status: 'loading',
+  status: {},
+  day: now,
+  selectingDay: false,
   cafeteria: '9f',
-  time: new Date().getHours() >= LUNCH_END ? 'night' : 'day',
+  time: now.getHours() >= LUNCH_END ? 'night' : 'day',
   menus: {},
   congestion: {},
   sortBy: 'booth',
