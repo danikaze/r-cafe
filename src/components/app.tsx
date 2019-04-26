@@ -49,7 +49,7 @@ export function App({ useStateValue }) {
   }
 
   const [state, dispatch] = useStateValue();
-  const { status, selectingDay, day, time, cafeteria, sortBy, sortOrder, rapAccess, apiAccess } = state as State;
+  const { status, selectingDay, day, time, cafeteria, sortBy, sortOrder, rapAccess } = state as State;
 
   React.useEffect(() => {
     dispatch(loadMenu(day));
@@ -64,15 +64,9 @@ export function App({ useStateValue }) {
 
   const dayKey = getNumericDate(day);
   const dayStatus = status[dayKey];
-  const isLoading = dayStatus === 'loading';
-
-  if (rapAccess === false && apiAccess === false) {
-    return <Error />;
-  }
-
   const todayMenu = state.menus[dayKey] as DayMenu;
   const congestion = state.congestion[cafeteria];
-  let cafeterias: Cafeteria[];
+  let cafeterias: Cafeteria[] = [];
   let dishes: Dish[];
   let contents: JSX.Element;
 
@@ -84,9 +78,10 @@ export function App({ useStateValue }) {
         </div>
       );
 
-  if (isLoading || !todayMenu) {
+  if (dayStatus === 'loading' || !todayMenu) {
     contents = <Loading />;
-    cafeterias = [];
+  } else if (dayStatus === 'error') {
+    contents = <Error />;
   } else {
     cafeterias = (Object.keys(todayMenu) as Cafeteria[]).filter((c) => todayMenu[c][time].length);
     dishes = sortDishes(sortBy, sortOrder, todayMenu && todayMenu[cafeteria] && todayMenu[cafeteria][time]);

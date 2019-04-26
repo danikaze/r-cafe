@@ -46,14 +46,18 @@ export function loadMenu(day: Date): ThunkAction<void, State, null, Action> {
       return Promise.resolve();
     }
 
+    function error(type: 'rap' | 'api'): void {
+      dispatch(type === 'api' ? updateApiAccess(false) : updateRapAccess(false));
+    }
+
     loadMenuFromApi(day)
       .then((menu) => combine(menu)
         .then(() => dispatch(updateApiAccess(true))))
-      .catch(() => dispatch(updateApiAccess(false)));
+      .catch(() => error('api'));
 
     loadMenuFromRap(day)
       .then((menu) => combine(menu)
       .then(() => dispatch(updateRapAccess(true))))
-    .catch(() => dispatch(updateRapAccess(false)));
+    .catch(() => error('rap'));
   };
 }
