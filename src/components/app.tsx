@@ -1,6 +1,6 @@
 // tslint:disable:no-boolean-literal-compare
 import * as React from 'react';
-import { Cafeteria, DayMenu, State } from '../def';
+import { Cafeteria, DayMenu, State, Dish } from '../def';
 import { selectTime, toggleOrderType, toggleOrderDirection, selectCafeteria, showDaySelection, selectDay } from '../store/actions/ui';
 import { loadCurrentCongestion } from '../store/actions/congestion';
 import { loadMenu } from '../store/actions/menu';
@@ -19,40 +19,6 @@ import { WeekDay } from './week-day';
 import { WeekDaySelector } from './week-day-selector';
 
 export function App({ useStateValue }) {
-  const [state, dispatch] = useStateValue();
-  const { status, selectingDay, day, time, cafeteria, sortBy, sortOrder, rapAccess, apiAccess } = state as State;
-
-  React.useEffect(() => {
-    dispatch(loadMenu(day));
-    dispatch(loadCurrentCongestion());
-
-    const congestionHandler = setInterval(() => dispatch(loadCurrentCongestion()), CONGESTION_INTERVAL);
-
-    return () => {
-      clearInterval(congestionHandler);
-    };
-  }, []);
-
-  const dayKey = getNumericDate(day);
-  const dayStatus = status[dayKey];
-  if (dayStatus === 'waiting' || dayStatus === 'loading') {
-    return <Loading />;
-  }
-
-  if (rapAccess === false && apiAccess === false) {
-    return <Error />;
-  }
-
-  const todayMenu = state.menus[dayKey] as DayMenu;
-
-  if (!todayMenu) {
-    return <Error />;
-  }
-
-  const cafeterias = (Object.keys(todayMenu) as Cafeteria[]).filter((c) => todayMenu[c][time].length);
-  const dishes = sortDishes(sortBy, sortOrder, todayMenu && todayMenu[cafeteria] && todayMenu[cafeteria][time]);
-  const congestion = state.congestion[cafeteria];
-
   function handleTimeSelect(time) {
     dispatch(selectTime(time));
   }
@@ -82,6 +48,28 @@ export function App({ useStateValue }) {
     dispatch(showDaySelection(false));
   }
 
+  const [state, dispatch] = useStateValue();
+  const { status, selectingDay, day, time, cafeteria, sortBy, sortOrder, rapAccess } = state as State;
+
+  React.useEffect(() => {
+    dispatch(loadMenu(day));
+    dispatch(loadCurrentCongestion());
+
+    const congestionHandler = setInterval(() => dispatch(loadCurrentCongestion()), CONGESTION_INTERVAL);
+
+    return () => {
+      clearInterval(congestionHandler);
+    };
+  }, []);
+
+  const dayKey = getNumericDate(day);
+  const dayStatus = status[dayKey];
+  const todayMenu = state.menus[dayKey] as DayMenu;
+  const congestion = state.congestion[cafeteria];
+  let cafeterias: Cafeteria[] = [];
+  let dishes: Dish[];
+  let contents: JSX.Element;
+
   const calendarSheet = selectingDay
     ? <WeekDaySelector days={getWorkDays()} active={day} onClick={handleDaySelection} />
     : (
@@ -89,6 +77,20 @@ export function App({ useStateValue }) {
           <WeekDay day={day} onClick={handleShowDaySelection} className='active' />;
         </div>
       );
+
+  if (dayStatus === 'loading' || !todayMenu) {
+    contents = <Loading />;
+  } else if (dayStatus === 'error') {
+    contents = <Error />;
+  } else {
+    cafeterias = (Object.keys(todayMenu) as Cafeteria[]).filter((c) => todayMenu[c][time].length);
+    dishes = sortDishes(sortBy, sortOrder, todayMenu && todayMenu[cafeteria] && todayMenu[cafeteria][time]);
+    contents = (
+      <div className='dishes'>
+        {dishes.map((dish) => <DishDetails key={dish.id} {...dish} />)}
+      </div>
+    );
+  }
 
   return (
     <div onClick={handleHideDaySelection}>
@@ -110,9 +112,7 @@ export function App({ useStateValue }) {
           onClick={handleCafeteriaSelect}
         />
       </div>
-      <div className='dishes'>
-        {dishes.map((dish) => <DishDetails key={dish.id} {...dish} />)}
-      </div>
+      {contents}
     </div>
   );
 }

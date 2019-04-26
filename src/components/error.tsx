@@ -8,8 +8,10 @@ export function Error(): JSX.Element {
       <div className='img' />
       <p>Error retrieving the data.</p>
       <p>
-        You need to be logged into <a {...linkOptions}>RAP</a> in order to see
-        the contents of the <em>confidential</em> menu...
+        Try logging into <a {...linkOptions}>RAP</a> to access the contents of the <em>confidential</em> menu.
+      </p>
+      <p>
+        If not, try a moments later.
       </p>
     </div>
   );
