@@ -8,6 +8,12 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.9.0
+- Added a calendar button to switch between any day of the current week, displaying its menu
+- Recovered the _shift+click_ feature on the sorter button, to choose the previous sorting method
+- Scroll of the menu resets to the top when the day, time or cafeteria is changed
+- Preload images when a menu is loaded, so they appear instantly when the cafeteria or the time is changed
+
 ### 0.8.0
 - Full reimplementation in React+TS
 - Use both (API+RAP) data sources to display the available implementation
