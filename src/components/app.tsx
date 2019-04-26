@@ -23,8 +23,8 @@ export function App({ useStateValue }) {
     dispatch(selectTime(time));
   }
 
-  function handleOrderTypeSelect() {
-    dispatch(toggleOrderType());
+  function handleOrderTypeSelect(prev?: boolean) {
+    dispatch(toggleOrderType(prev));
   }
 
   function handleOrderDirectionSelect() {
