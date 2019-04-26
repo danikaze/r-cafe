@@ -4,7 +4,7 @@ import { SorterType, SorterDirection } from '../def';
 export interface Props {
   type: SorterType;
   direction: SorterDirection;
-  onClickType(currentType: SorterType): void;
+  onClickType(prev?: boolean): void;
   onClickDirection(currentDirection: SorterDirection): void;
 }
 
@@ -42,8 +42,9 @@ const map = {
 export function SortButton(props: Props) {
   const data = map[props.type];
 
-  function typeClickHandler() {
-    props.onClickType(props.type);
+  function typeClickHandler(ev: React.MouseEvent) {
+    ev.stopPropagation();
+    props.onClickType(ev.shiftKey);
   }
 
   function directionClickHandler(ev: React.MouseEvent) {

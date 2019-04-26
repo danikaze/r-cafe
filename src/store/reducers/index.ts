@@ -49,7 +49,7 @@ export function reducer(state: State, action: Action): State {
 
     case 'toggleOrderType':
       const i = orderTypes.indexOf(state.sortBy);
-      const j = (i + 1) % orderTypes.length;
+      const j = (i + orderTypes.length + (action.prev ? -1 : 1)) % orderTypes.length;
       return {
         ...state,
         sortBy: orderTypes[j],

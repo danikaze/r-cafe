@@ -11,6 +11,7 @@ export interface SelectCafeteria {
 }
 
 export interface ToggleOrderType {
+  prev?: boolean;
   type: 'toggleOrderType';
 }
 
@@ -42,8 +43,9 @@ export function selectCafeteria(cafeteria: Cafeteria): SelectCafeteria {
   };
 }
 
-export function toggleOrderType(): ToggleOrderType {
+export function toggleOrderType(prev?: boolean): ToggleOrderType {
   return {
+    prev,
     type: 'toggleOrderType',
   };
 }
