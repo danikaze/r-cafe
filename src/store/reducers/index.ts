@@ -1,4 +1,4 @@
-import { State, SorterType } from '../../def';
+import { State, SorterType, Cafeteria } from '../../def';
 import { Action } from '../actions';
 import { getNumericDate } from '../../util/date';
 
@@ -20,8 +20,13 @@ export function reducer(state: State, action: Action): State {
 
     case 'updateMenu':
       dayKey = getNumericDate(action.day);
+      let cafeteria = state.cafeteria;
+      if (action.data[dayKey][state.cafeteria].day.length === 0) {
+        cafeteria = Object.keys(action.data[dayKey])[0] as Cafeteria;
+      }
       return {
         ...state,
+        cafeteria,
         menus: action.data,
         status: {
           ...state.status,
