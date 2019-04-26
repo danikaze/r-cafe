@@ -6,6 +6,7 @@ import { combineMenus } from '../../util/combine-menus';
 import { updateRapAccess, updateApiAccess } from './service';
 import { Action } from '.';
 import { getNumericDate } from '../../util/date';
+import { preloadMenuImages } from '../../util/preload-menu-images';
 
 export interface LoadMenu {
   type: 'loadMenu';
@@ -43,6 +44,7 @@ export function loadMenu(day: Date): ThunkAction<void, State, null, Action> {
         data: menu,
       });
 
+      preloadMenuImages(menu[dayKey]);
       return Promise.resolve();
     }
 

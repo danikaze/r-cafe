@@ -556,3 +556,7 @@ body {
 .weekday.past {
   opacity: 0.6;
 }
+
+#preload {
+  display: none;
+}
