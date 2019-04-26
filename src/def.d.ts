@@ -6,7 +6,7 @@ export type Booth = 'Bowl & Donburi & Curry' | 'Bowl A' | 'Bowl B' | 'Bowl' | 'G
                   | 'Pasta' | 'Ramen' | 'Udon & Soba';
 export type SorterType = 'booth' | 'kcal' | 'carbs' | 'fat' | 'protein' | 'sodium';
 export type SorterDirection = 'asc' | 'desc';
-export type AjaxStatus = 'waiting' | 'loading' | 'ready' | 'error';
+export type AjaxStatus = 'loading' | 'ready' | 'error';
 export type Congestion = Partial<{ [key in Cafeteria]: number }>;
 export type CafeteriaMenu = { [key in Time]: Dish[] };
 export type DayMenu = { [key in Cafeteria]: CafeteriaMenu};

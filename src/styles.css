@@ -311,6 +311,10 @@ body {
 }
 .dish .umai-off .icon { background-image: url(img/heart-off.png); }
 
+#loading {
+  padding-top: 62px;
+}
+
 .spinner {
   margin: 100px auto;
   width: 50px;
