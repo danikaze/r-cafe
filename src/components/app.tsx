@@ -89,10 +89,10 @@ export function App({ useStateValue }) {
         </div>
       );
 
-  if (dayStatus === 'loading' || !todayMenu) {
-    contents = <Loading />;
-  } else if (dayStatus === 'error') {
+  if (dayStatus === 'error') {
     contents = <Error />;
+  } else if (dayStatus === 'loading' || !todayMenu) {
+    contents = <Loading />;
   } else {
     cafeterias = (Object.keys(todayMenu) as Cafeteria[]).filter((c) => todayMenu[c][time].length);
     dishes = sortDishes(sortBy, sortOrder, todayMenu && todayMenu[cafeteria] && todayMenu[cafeteria][time]);

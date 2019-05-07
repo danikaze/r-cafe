@@ -18,6 +18,16 @@ export function reducer(state: State, action: Action): State {
         },
       };
 
+    case 'loadMenuError':
+      dayKey = getNumericDate(action.day);
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          [dayKey]: 'error',
+        },
+      };
+
     case 'updateMenu':
       dayKey = getNumericDate(action.day);
       let cafeteria = state.cafeteria;
