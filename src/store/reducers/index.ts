@@ -1,15 +1,27 @@
-import { State, SorterType, Cafeteria } from '../../def';
+import { State, SorterType } from '../../def';
 import { Action } from '../actions';
 import { getNumericDate } from '../../util/date';
+import { selectDefaultMenu, MenuSelection } from '../../util/select-default-menu';
+import { LoadMenu } from '../actions/menu';
+import { SelectTime, SelectCafeteria } from '../actions/ui';
 
 const orderTypes: SorterType[] = ['booth', 'kcal', 'carbs', 'fat', 'protein', 'sodium'];
+const checkSelection = ['updateMenu', 'selectTime', 'selectCafeteria', 'selectDay'];
 
 export function reducer(state: State, action: Action): State {
-  let dayKey: string;
+  const dayKey = getNumericDate((action as LoadMenu).day || state.day);
+  let selection: MenuSelection;
+
+  if (checkSelection.indexOf(action.type) !== -1) {
+    const weeklyMenu = action.type === 'updateMenu' ? action.data : state.menus;
+    selection = selectDefaultMenu(weeklyMenu[dayKey], {
+      cafeteria: (action as SelectCafeteria).cafeteria || state.cafeteria,
+      time: (action as SelectTime).time || state.time,
+    });
+  }
 
   switch (action.type) {
     case 'loadMenu':
-      dayKey = getNumericDate(action.day);
       return {
         ...state,
         status: {
@@ -19,7 +31,6 @@ export function reducer(state: State, action: Action): State {
       };
 
     case 'loadMenuError':
-      dayKey = getNumericDate(action.day);
       return {
         ...state,
         status: {
@@ -29,14 +40,9 @@ export function reducer(state: State, action: Action): State {
       };
 
     case 'updateMenu':
-      dayKey = getNumericDate(action.day);
-      let cafeteria = state.cafeteria;
-      if (action.data[dayKey][state.cafeteria].day.length === 0) {
-        cafeteria = Object.keys(action.data[dayKey])[0] as Cafeteria;
-      }
       return {
         ...state,
-        cafeteria,
+        ...selection,
         menus: action.data,
         status: {
           ...state.status,
@@ -53,13 +59,13 @@ export function reducer(state: State, action: Action): State {
     case 'selectTime':
       return {
         ...state,
-        time: action.time,
+        ...selection,
       };
 
     case 'selectCafeteria':
       return {
         ...state,
-        cafeteria: action.cafeteria,
+        ...selection,
       };
 
     case 'toggleOrderType':
@@ -97,8 +103,9 @@ export function reducer(state: State, action: Action): State {
     case 'selectDay': {
       return {
         ...state,
-        selectingDay: false,
+        ...selection,
         day: action.day,
+        selectingDay: false,
       };
     }
 
