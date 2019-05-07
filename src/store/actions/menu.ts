@@ -34,10 +34,11 @@ export function loadMenu(day: Date): ThunkAction<void, State, null, Action> {
       type: 'loadMenu',
     });
 
-    let menu = state.menus;
+    let apiMenu: WeekMenu;
+    let rapMenu: WeekMenu;
 
-    function combine(newMenu: WeekMenu): Promise<void> {
-      menu = combineMenus(menu, newMenu);
+    function combine(): void {
+      const menu = combineMenus(apiMenu, rapMenu);
       dispatch({
         day,
         type: 'updateMenu',
@@ -45,7 +46,6 @@ export function loadMenu(day: Date): ThunkAction<void, State, null, Action> {
       });
 
       preloadMenuImages(menu[dayKey]);
-      return Promise.resolve();
     }
 
     function error(type: 'rap' | 'api'): void {
@@ -53,13 +53,19 @@ export function loadMenu(day: Date): ThunkAction<void, State, null, Action> {
     }
 
     loadMenuFromApi(day)
-      .then((menu) => combine(menu)
-        .then(() => dispatch(updateApiAccess(true))))
+      .then((menu) => {
+        apiMenu = menu;
+        combine();
+        dispatch(updateApiAccess(true));
+      })
       .catch(() => error('api'));
 
     loadMenuFromRap(day)
-      .then((menu) => combine(menu)
-      .then(() => dispatch(updateRapAccess(true))))
+      .then((menu) => {
+        rapMenu = menu;
+        combine();
+        dispatch(updateRapAccess(true));
+      })
     .catch(() => error('rap'));
   };
 }
