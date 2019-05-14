@@ -8,6 +8,11 @@ Get the extension in the [Chrome Store](http://bit.ly/&#114;akuten-cafeteria-men
 
 ## Change log
 
+### 0.9.1
+- Disabled API source data because it returns wrong booths, creating duplicated entries
+- Auto select time/cafeteria if previous selection doesn't exist
+- Small graphical improvements
+
 ### 0.9.0
 - Added a calendar button to switch between any day of the current week, displaying its menu
 - Recovered the _shift+click_ feature on the sorter button, to choose the previous sorting method
